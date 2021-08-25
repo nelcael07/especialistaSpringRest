@@ -1,12 +1,18 @@
 package com.apirest.especilistaspringrest.di.notificacao;
 
+import org.springframework.stereotype.Component;
+
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
+import com.apirest.especialistaspringrest.di.service.Notificador;
 
-public class NotificadorEmail {
-
-  public void notificar(Cliente cliente, String mensagem){
-    System.out.printf("Notificar %s atráves do email %s: %s \n",
-    cliente.getNome(), cliente.getEmail(), mensagem
+@Component
+public class NotificadorEmail implements Notificador{
+	//construtor
+	
+	@Override
+	public void notificar(Cliente cliente, String mensagem){
+		System.out.printf("Notificar %s atráves do email %s: %s \n",
+		cliente.getNome(), cliente.getEmail(), mensagem
     );
   }
 }
