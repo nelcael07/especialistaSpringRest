@@ -14,7 +14,6 @@ public class MeuPrimeiroController {
   private AtivacaoClienteService ativacaoClienteService;
   
   public MeuPrimeiroController(AtivacaoClienteService ativacaoClienteService) {
-	System.out.println("Meu primeiro controller: "+ ativacaoClienteService);
 	this.ativacaoClienteService = ativacaoClienteService;
   }
 
