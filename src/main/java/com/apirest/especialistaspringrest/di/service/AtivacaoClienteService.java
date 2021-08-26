@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
 
 
-@Component
+
 public class AtivacaoClienteService{
 	private Notificador notificador;
 	//construtor
