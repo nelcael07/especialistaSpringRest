@@ -1,8 +1,15 @@
 package com.apirest.especialistaspringrest.di.service;
 
+
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
+
+
+
 
 @Component
 public class AtivacaoClienteService{
@@ -14,8 +21,12 @@ public class AtivacaoClienteService{
 	public void ativar(Cliente cliente){
 		cliente.ativar();
 		
+//		for(Notificador notificador: notificadores) {
+//			notificador.notificar(cliente, "SEU CADASTRO NO SISTEMA ESTÁ ATIVO");
+//		}
+		
 		if(notificador!= null) {
-			notificador.notificar(cliente, "Seu cadastro no sistema está ativo!");			
+			System.out.println("tem aqui");			
 		}else {
 			System.out.println("Não exite notificador, mas cliente foi ativado!");
 		}
