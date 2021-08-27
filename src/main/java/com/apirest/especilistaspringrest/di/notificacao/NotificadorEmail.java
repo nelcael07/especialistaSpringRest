@@ -7,6 +7,7 @@ import com.apirest.especialistaspringrest.di.service.Notificador;
 
 @Component
 public class NotificadorEmail implements Notificador{
+	
 	@Override
 	public void notificar(Cliente cliente, String mensagem){
 		System.out.printf("Notificar %s atráves do email %s : %s \n",
