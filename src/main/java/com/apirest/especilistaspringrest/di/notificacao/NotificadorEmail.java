@@ -1,13 +1,13 @@
 package com.apirest.especilistaspringrest.di.notificacao;
 
-import org.springframework.context.annotation.Primary;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
 import com.apirest.especialistaspringrest.di.service.Notificador;
 
-//mandando dar prioridade para esse bean na injeção de dependencia, isso se dá quando tem uma injeção do tipo de interface e tem mais de uma classe implementando essa interface
-@Primary
+//usando qualifier para tratar a ambiguidade
+@Qualifier("email")
 @Component
 public class NotificadorEmail implements Notificador{
 	

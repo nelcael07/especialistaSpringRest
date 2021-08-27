@@ -5,6 +5,7 @@ package com.apirest.especialistaspringrest.di.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
 
@@ -13,8 +14,8 @@ import com.apirest.especialistaspringrest.di.modelo.Cliente;
 
 @Component
 public class AtivacaoClienteService{
-	//maneira de injetar dependencia
-	//required false diz que a instancia de notificador não é fundamental, se tiver beleza, se não tiver ele funciona do mesmo jeito
+	//digo para ele achar o qualifier email na hora de criar a instancia, lembrando que a classe email está qualificada como email
+	@Qualifier("email")
 	@Autowired(required = false)
 	private Notificador notificador;
 	
