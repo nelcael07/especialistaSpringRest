@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
-import com.apirest.especialistaspringrest.di.service.Notificador;
 
-//usando qualifier para tratar a ambiguidade
-@Qualifier("email")
+//anotação personalizada
+@TipoDoNotificador(NivelUrgencia.URGENTE)
 @Component
 public class NotificadorEmail implements Notificador{
 	

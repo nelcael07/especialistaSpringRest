@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
 import com.apirest.especialistaspringrest.di.service.AtivacaoClienteService;
-import com.apirest.especialistaspringrest.di.service.Notificador;
+import com.apirest.especilistaspringrest.di.notificacao.Notificador;
 
 @Controller
 public class MeuPrimeiroController {

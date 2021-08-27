@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
+import com.apirest.especilistaspringrest.di.notificacao.Notificador;
 
 
 
 
 @Component
 public class AtivacaoClienteService{
-	//digo para ele achar o qualifier email na hora de criar a instancia, lembrando que a classe email está qualificada como email
-	@Qualifier("email")
+	
 	@Autowired(required = false)
 	private Notificador notificador;
 	

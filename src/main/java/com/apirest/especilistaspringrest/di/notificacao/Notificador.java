@@ -1,4 +1,4 @@
-package com.apirest.especialistaspringrest.di.service;
+package com.apirest.especilistaspringrest.di.notificacao;
 
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
 

@@ -3,8 +3,8 @@ package com.apirest.especilistaspringrest.di.notificacao;
 import org.springframework.stereotype.Component;
 
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
-import com.apirest.especialistaspringrest.di.service.Notificador;
 
+@TipoDoNotificador(NivelUrgencia.NORMAL)
 @Component
 public class NotificadorSMS implements Notificador{
 	
