@@ -1,24 +1,30 @@
 package com.apirest.especilistaspringrest.di.notificacao;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.apirest.especialistaspringrest.di.modelo.Cliente;
 
-//anotação diz que esse arquivo rodara em prod - produção
-@Profile("Prod")
-//anotação personalizada
 @TipoDoNotificador(NivelUrgencia.URGENTE)
 @Component
 public class NotificadorEmail implements Notificador{
 	
-	public NotificadorEmail() {
-		System.out.println("Email Real");
-	}
+	//esse value busca o dados lá do properties passando exatamente o nome da configuração passada lá no arquivo de configuração	
+	@Value("${notificador.email.host-servidor}")
+	private String host;
+	
+	@Value("${notificador.email.porta-servidor}")
+	private Integer porta;
+	
 	
 	@Override
 	public void notificar(Cliente cliente, String mensagem){
-		System.out.printf("Notificar %s atráves do SMS %s : %s \n",
+			
+		System.out.println("host: "+ host);
+		System.out.println("porta: "+ porta);
+		
+		System.out.printf("Notificar %s atráves do email %s : %s \n",
 		cliente.getNome(), cliente.getTelefone(), mensagem);
 	}
 
