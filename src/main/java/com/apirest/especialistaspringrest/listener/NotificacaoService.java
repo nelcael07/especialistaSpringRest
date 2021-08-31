@@ -19,7 +19,7 @@ public class NotificacaoService {
 	
 	@EventListener
 	public void clienteAtivadoListener(ClienteAtivacaoEvent event) {
-		System.out.println("Cliente "+event.getCliente().getNome()+" agora está aquivo");
+		System.out.println("Cliente "+event.getCliente().getNome()+" agora está ativo");
 //		notificador.notificar(event.getCliente(), "NOTIFICANDO");
 	}
 }

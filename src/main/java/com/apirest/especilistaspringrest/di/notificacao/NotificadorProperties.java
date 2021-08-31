@@ -30,9 +30,4 @@ public class NotificadorProperties {
 		this.portaServidor = portaServidor;
 	}
 	
-	
-	
-	
-	
-	
 }
