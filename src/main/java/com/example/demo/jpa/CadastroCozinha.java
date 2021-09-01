@@ -25,7 +25,7 @@ public class CadastroCozinha {
 	
 	// quando vai adicionar algo no banco de dados, tem que usar a anotação transition	
 	@Transactional
-	public Cozinha adicionar(Cozinha cozinha) {
+	public Cozinha salvar(Cozinha cozinha) {
 		//merge significa fundir,juntar		
 		return manager.merge(cozinha);
 	}
@@ -34,4 +34,5 @@ public class CadastroCozinha {
 	public Cozinha buscar(Long id) {
 		return manager.find(Cozinha.class, id);
 	}
+	
 }
