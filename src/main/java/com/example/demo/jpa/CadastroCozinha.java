@@ -35,4 +35,11 @@ public class CadastroCozinha {
 		return manager.find(Cozinha.class, id);
 	}
 	
+	@Transactional
+	public void remover (Cozinha cozinha) {
+		//busca a instacia de cozinha criada no banco para poder excluir		
+		cozinha = buscar(cozinha.getId());
+		manager.remove(cozinha);
+	}
+	
 }
