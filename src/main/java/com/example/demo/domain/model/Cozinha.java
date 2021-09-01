@@ -13,7 +13,6 @@ import javax.persistence.Table;
 @Entity
 public class Cozinha {
 	
-	
 	@Id
 	//passando a obrigação de geração de id para o persistor dos dados(Banco de dados)	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
