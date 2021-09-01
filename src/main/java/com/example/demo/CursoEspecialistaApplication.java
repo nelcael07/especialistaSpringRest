@@ -1,13 +1,13 @@
-package com.apirest.especialistaspringrest;
+package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EspecialistaspringrestApplication {
+public class CursoEspecialistaApplication {
+
 	public static void main(String[] args) {
-		SpringApplication.run(EspecialistaspringrestApplication.class, args);
-		
+		SpringApplication.run(CursoEspecialistaApplication.class, args);
 	}
 
 }

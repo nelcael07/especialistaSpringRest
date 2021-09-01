@@ -1,1 +1,0 @@
-o java utilizado no projeto sera o java 12, o projeto visa a criação do algafood.
