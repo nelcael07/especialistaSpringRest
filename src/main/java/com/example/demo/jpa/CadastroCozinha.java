@@ -29,4 +29,9 @@ public class CadastroCozinha {
 		//merge significa fundir,juntar		
 		return manager.merge(cozinha);
 	}
+	
+	//Busca por id			
+	public Cozinha buscar(Long id) {
+		return manager.find(Cozinha.class, id);
+	}
 }
