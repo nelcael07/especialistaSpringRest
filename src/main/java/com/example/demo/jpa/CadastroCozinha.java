@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.model.Cozinha;
 
@@ -20,5 +21,12 @@ public class CadastroCozinha {
 	public List<Cozinha> listar(){
 		//o metodo createQuery retorna um typedquery do tipo cozinha		
 		return  manager.createQuery("from Cozinha", Cozinha.class ).getResultList();
+	}
+	
+	// quando vai adicionar algo no banco de dados, tem que usar a anotação transition	
+	@Transactional
+	public Cozinha adicionar(Cozinha cozinha) {
+		//merge significa fundir,juntar		
+		return manager.merge(cozinha);
 	}
 }
