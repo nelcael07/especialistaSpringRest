@@ -1,12 +1,9 @@
 package com.example.demo.infrastructure.repository;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.stereotype.Component;
-
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.RestauranteRepository;
 
@@ -17,6 +14,7 @@ public class RestauranteRespositoryImpl implements RestauranteRepository {
 	private EntityManager manager;
 	
 	public List<Restaurante> listar(){
+		System.out.println("veio até aqui");
 		return manager.createQuery("from restaurante", Restaurante.class).getResultList();
 	}
 	
