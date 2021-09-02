@@ -7,9 +7,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 @Entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Restaurante {
 
+	@EqualsAndHashCode.Include
 	@Id
 	private Long Id;
 	
@@ -18,48 +24,4 @@ public class Restaurante {
 	@Column(name="taxa_frete")
 	private BigDecimal taxaFrete;
 
-	public Long getId() {
-		return Id;
-	}
-
-	public void setId(Long id) {
-		Id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public BigDecimal getTaxaFrete() {
-		return taxaFrete;
-	}
-
-	public void setTaxaFrete(BigDecimal taxaFrete) {
-		this.taxaFrete = taxaFrete;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(Id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Restaurante other = (Restaurante) obj;
-		return Objects.equals(Id, other.Id);
-	}
-	
-	
-	
-	
 }
