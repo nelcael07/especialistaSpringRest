@@ -1,11 +1,10 @@
 package com.example.demo.domain.model;
 
 import java.math.BigDecimal;
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,5 +22,10 @@ public class Restaurante {
 	
 	@Column(name="taxa_frete")
 	private BigDecimal taxaFrete;
+	
+	//muitos restaurantes possuem uma cozinha	
+	@ManyToOne
+	private Cozinha cozinha;
+	
 
 }
