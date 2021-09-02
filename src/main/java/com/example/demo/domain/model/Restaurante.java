@@ -22,13 +22,14 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(nullable = false)
 	private String nome;
 	
-	@Column(name="taxa_frete")
+	//nullable false não aceita null no banco			
+	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
 	
-	@ManyToOne
-	// nomeia a chave estrangeira 	
-	@JoinColumn(name="id_cozinha")
+	@ManyToOne	
+	@JoinColumn(name="id_cozinha", nullable = false)
 	private Cozinha cozinha;
 }
