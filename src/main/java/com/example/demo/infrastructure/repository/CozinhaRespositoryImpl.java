@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.model.Cozinha;
+import com.example.demo.domain.model.FormaPagamento;
 import com.example.demo.domain.repository.CozinhaRespository;
 
 @Component
