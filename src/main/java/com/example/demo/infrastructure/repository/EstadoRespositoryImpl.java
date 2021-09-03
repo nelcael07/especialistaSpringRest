@@ -17,7 +17,7 @@ public class EstadoRespositoryImpl implements EstadoRepository {
 	
 	@Override
 	public List<Estado> listar(){
-		return manager.createQuery("from estado", Estado.class).getResultList();
+		return manager.createQuery("from Estado", Estado.class).getResultList();
 	}
 	
 	@Override
@@ -32,8 +32,8 @@ public class EstadoRespositoryImpl implements EstadoRepository {
 	
 	@Override
 	public void remover(Estado estado) {
-		Estado query = buscar(estado.getId());
-		manager.remove(query);
+		estado = buscar(estado.getId());
+		manager.remove(estado);
 	}
 	
 }	

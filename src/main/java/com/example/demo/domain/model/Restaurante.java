@@ -23,12 +23,11 @@ public class Restaurante {
 	
 	@Column(nullable = false)
 	private String nome;
-	
-	//nullable false não aceita null no banco			
+		
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
 	
 	@ManyToOne	
-	@JoinColumn(name="id_cozinha", nullable = false)
+	@JoinColumn( nullable = false )
 	private Cozinha cozinha;
 }

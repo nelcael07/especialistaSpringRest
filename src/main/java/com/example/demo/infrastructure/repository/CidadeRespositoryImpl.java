@@ -30,8 +30,8 @@ public class CidadeRespositoryImpl implements CidadeRepository{
 	
 	@Override
 	public void remover(Cidade cidade) {
-		Cidade query = buscar(cidade.getId());
-		manager.remove(query);
+		cidade = buscar(cidade.getId());
+		manager.remove(cidade);
 	}
 	
 }

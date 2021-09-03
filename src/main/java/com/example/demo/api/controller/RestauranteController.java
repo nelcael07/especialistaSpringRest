@@ -5,19 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.demo.domain.model.Cozinha;
-import com.example.demo.domain.repository.CozinhaRespository;
+import com.example.demo.domain.model.Restaurante;
+import com.example.demo.domain.repository.RestauranteRepository;
 
 @RestController
-@RequestMapping("/cozinhas")
-public class CozinhaController {
+@RequestMapping("/restaurantes")
+public class RestauranteController {
 	
 	@Autowired
-	private CozinhaRespository cozinhaRespository;
+	private RestauranteRepository restauranteRepository;
 	
 	@GetMapping
-	public List<Cozinha> listar(){
-		return cozinhaRespository.listar();
+	public List<Restaurante> listar(){
+		return restauranteRepository.listar();
 	}
-	
 }

@@ -21,7 +21,7 @@ public class FormaPagamentoRespositoryImpl implements FormaPagamentoRepository{
 	
 	@Override
 	public List<FormaPagamento> listar(){
-		return manager.createQuery("from forma_pagamento", FormaPagamento.class).getResultList();
+		return manager.createQuery("from FormaPagamento", FormaPagamento.class).getResultList();
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class FormaPagamentoRespositoryImpl implements FormaPagamentoRepository{
 	@Transactional
 	@Override
 	public void remover(FormaPagamento formaPagamento) {
-		FormaPagamento query = buscar(formaPagamento.getId());
-		manager.remove(query);
+		formaPagamento = buscar(formaPagamento.getId());
+		manager.remove(formaPagamento);
 	}
 }

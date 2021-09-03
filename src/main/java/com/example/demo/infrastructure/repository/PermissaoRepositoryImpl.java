@@ -19,7 +19,7 @@ public class PermissaoRepositoryImpl implements PermissaoRespository {
 	
 	@Override
 	public List<Permissao> listar(){
-		return manager.createQuery("from permissao", Permissao.class).getResultList();
+		return manager.createQuery("from Permissao", Permissao.class).getResultList();
 	}
 	
 	@Override
@@ -34,8 +34,8 @@ public class PermissaoRepositoryImpl implements PermissaoRespository {
 	
 	@Override
 	public void remover(Permissao permissao) {
-		Permissao query = buscar(permissao.getId());
-		manager.remove(query);
+		permissao = buscar(permissao.getId());
+		manager.remove(permissao);
 	}
 	
 	
