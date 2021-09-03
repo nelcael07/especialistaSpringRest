@@ -1,1 +1,0 @@
-o package model cuida da parte da persistencia de dados, sendo implementado dentro dele as class que representam uma entidade do banco de dados.
