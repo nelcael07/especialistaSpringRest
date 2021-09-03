@@ -12,15 +12,15 @@ import com.example.demo.domain.repository.CozinhaRespository;
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
-	
+
 	@Autowired
 	private CozinhaRespository cozinhaRespository;
-	
+
 	@GetMapping 
-	public List<Cozinha> listar(){
+	public List<Cozinha> listar(){ 
 		return cozinhaRespository.listar();
 	}
-	
+
 	@GetMapping("/{id}")
 	public Cozinha buscar(@PathVariable Long id) {
 		System.out.println(id);
