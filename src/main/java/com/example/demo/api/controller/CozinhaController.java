@@ -15,9 +15,12 @@ public class CozinhaController {
 	@Autowired
 	private CozinhaRespository cozinhaRespository;
 	
-	@GetMapping
+	//COMO PADRÃO O SPRING USA JSON		
+	//posso especificar em cada metodo do controller qual formato ele pode ser exportado.	
+	 //@GetMapping(produces = "application/json")
+	
+	@GetMapping 
 	public List<Cozinha> listar(){
 		return cozinhaRespository.listar();
 	}
-	
 }
