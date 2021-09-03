@@ -11,8 +11,6 @@ insert into permissao(nome, descricao) values ('fazer tudo', 'tem liberdade para
 insert into forma_pagamento(descricao) values ('cartão de credito')
 insert into forma_pagamento(descricao) values ('cartão de debito')
 
-
-
 insert into cozinha (nome) values ('Tailandesa');
 insert into cozinha (nome) values ('Brasileira');
 insert into cozinha (nome) values ('Italiana');
