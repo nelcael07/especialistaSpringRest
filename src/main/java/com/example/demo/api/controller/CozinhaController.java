@@ -25,21 +25,16 @@ public class CozinhaController {
 		return cozinhaRespository.listar();
 	}
 	
-	
 	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
-		Cozinha cozinha =  cozinhaRespository.buscar(id);
+		Cozinha cozinha = cozinhaRespository.buscar(id);
 		
-//		return ResponseEntity.status(HttpStatus.OK).body(cozinha);
-		//outra maneira de retornar o status code, agora com o ResponseEntity, esse recurso é possitivo quando se usa condicional(se der isso retorna isso....)		
-//		return ResponseEntity.ok(cozinha);
-		
-		//fazendo configurações no header da response		
-		//dizendo que esse recurso foi movido para outro local;		
-		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.LOCATION, "http:\\localhost:3000\cozinhas");
-		
-		return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build());
-		
-	}
+		//condicional para ver qual é a responsta que será enviada pra o cliente		
+		if (cozinha != null) {
+			return ResponseEntity.ok(cozinha);
+		}else {
+		  return ResponseEntity.notFound().build();
+		}
+	}	
+	
 }
