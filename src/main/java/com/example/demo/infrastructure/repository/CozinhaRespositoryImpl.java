@@ -3,6 +3,8 @@ package com.example.demo.infrastructure.repository;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.domain.model.Cozinha;
@@ -32,8 +34,12 @@ public class CozinhaRespositoryImpl implements CozinhaRespository {
 	
 	@Transactional
 	@Override
-	public void remover (Cozinha cozinha) {		
-		cozinha = buscar(cozinha.getId());
+	public void remover (Long id) {
+		Cozinha cozinha = buscar(id);
+		if (cozinha == null) {
+			//no paramentro de construção eu digo quantos elementos eu esperava, no caso eu esperava pelo menos uma cozinha.			
+			throw new EmptyResultDataAccessException(1);
+		}
 		manager.remove(cozinha);
 	}
 	

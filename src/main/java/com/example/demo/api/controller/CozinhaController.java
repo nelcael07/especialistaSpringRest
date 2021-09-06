@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.domain.exception.EntidadeEmUsoException;
+import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.repository.CozinhaRespository;
 import com.example.demo.domain.service.CadastroCozinhaService;
@@ -29,15 +32,23 @@ public class CozinhaController {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 	
-	@GetMapping 
-	public List<Cozinha> listar(){ 
-		return cozinhaRespository.listar();
-	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha){
 		return cadastroCozinha.salvar(cozinha);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
+		try {
+			cadastroCozinha.excluir(id);
+			return ResponseEntity.noContent().build();
+		}catch (EntidadeEmUsoException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 	
 	@GetMapping("/{id}")
@@ -48,7 +59,12 @@ public class CozinhaController {
 		}else {
 		  return ResponseEntity.notFound().build();
 		}
-	}	
+	}
+	
+	@GetMapping 
+	public List<Cozinha> listar(){ 
+		return cozinhaRespository.listar();
+	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
@@ -62,19 +78,5 @@ public class CozinhaController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
-		// tratando a exeção de não poder excluir uma cozinha que tem relação no banco com algum restaurante.		
-		try {
-			Cozinha cozinha = cozinhaRespository.buscar(id);
-			if (cozinha != null) {
-				cozinhaRespository.remover(cozinha);
-				return ResponseEntity.noContent().build();
-			}
-			return ResponseEntity.notFound().build();
-		}catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
-	}
 	
 }
