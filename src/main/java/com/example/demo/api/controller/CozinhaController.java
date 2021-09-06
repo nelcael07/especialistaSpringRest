@@ -1,6 +1,8 @@
 package com.example.demo.api.controller;
 
 import java.util.List;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,11 +40,23 @@ public class CozinhaController {
 		}
 	}	
 	
-	//a requisição requestBody vincula o corpo da requisição com a instancia de cozinha criada	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha){
 		return cozinhaRespository.salvar(cozinha);
 	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
+		Cozinha cozinhabusca = cozinhaRespository.buscar(id);
+		if (cozinhabusca != null) {
+			// estou compiando as propriedades de cozinha para cozinhabusca, menos o id			
+			BeanUtils.copyProperties(cozinha, cozinhabusca, "id");
+			cozinhaRespository.salvar(cozinhabusca);
+			return ResponseEntity.ok(cozinhabusca);
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
 	
 }
