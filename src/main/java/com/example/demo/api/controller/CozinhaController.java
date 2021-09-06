@@ -1,12 +1,12 @@
 package com.example.demo.api.controller;
 
 import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +30,12 @@ public class CozinhaController {
 		return cozinhaRespository.listar();
 	}
 	
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public Cozinha adicionar(@RequestBody Cozinha cozinha){
+		return cozinhaRespository.salvar(cozinha);
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
 		Cozinha cozinha = cozinhaRespository.buscar(id);
@@ -39,12 +45,6 @@ public class CozinhaController {
 		  return ResponseEntity.notFound().build();
 		}
 	}	
-	
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody Cozinha cozinha){
-		return cozinhaRespository.salvar(cozinha);
-	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
@@ -58,5 +58,19 @@ public class CozinhaController {
 		return ResponseEntity.notFound().build();
 	}
 	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
+		// tratando a exeção de não poder excluir uma cozinha que tem relação no banco com algum restaurante.		
+		try {
+			Cozinha cozinha = cozinhaRespository.buscar(id);
+			if (cozinha != null) {
+				cozinhaRespository.remover(cozinha);
+				return ResponseEntity.noContent().build();
+			}
+			return ResponseEntity.notFound().build();
+		}catch (DataIntegrityViolationException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
 	
 }
