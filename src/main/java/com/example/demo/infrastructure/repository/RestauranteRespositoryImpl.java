@@ -1,14 +1,14 @@
 package com.example.demo.infrastructure.repository;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.RestauranteRepository;
 
@@ -36,8 +36,11 @@ public class RestauranteRespositoryImpl implements RestauranteRepository {
 	
 	@Transactional
 	@Override
-	public void remover(Restaurante restaurante) {
-		restaurante = buscar(restaurante.getId());
+	public void remover(Long id) {
+		Restaurante restaurante = buscar(id);
+		if (restaurante == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
 		manager.remove(restaurante);
 	}
 }

@@ -32,6 +32,7 @@ public class CozinhaController {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 	
+	//PARA FAZER METODO QUE MUDEM ALGO NO BANCO SE USA O SERVICE
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -51,31 +52,33 @@ public class CozinhaController {
 		}
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
-		Cozinha cozinha = cozinhaRespository.buscar(id);
-		if (cozinha != null) {
-			return ResponseEntity.ok(cozinha);
-		}else {
-		  return ResponseEntity.notFound().build();
-		}
-	}
-	
-	@GetMapping 
-	public List<Cozinha> listar(){ 
-		return cozinhaRespository.listar();
-	}
-	
 	@PutMapping("/{id}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
 		Cozinha cozinhabusca = cozinhaRespository.buscar(id);
 		if (cozinhabusca != null) {
 			// estou compiando as propriedades de cozinha para cozinhabusca, menos o id			
 			BeanUtils.copyProperties(cozinha, cozinhabusca, "id");
-			cozinhaRespository.salvar(cozinhabusca);
+			cozinhabusca = cadastroCozinha.salvar(cozinhabusca);
 			return ResponseEntity.ok(cozinhabusca);
 		}
 		return ResponseEntity.notFound().build();
+	}
+
+	//PARA FAZER BUSCA NO BANCO PODE SE UTILIZAR O REPOSITORY MESMO.
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
+		Cozinha cozinha = cozinhaRespository.buscar(id);
+		if (cozinha != null) {
+			return ResponseEntity.ok(cozinha);
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping 
+	public List<Cozinha> listar(){ 
+		return cozinhaRespository.listar();
 	}
 	
 	
