@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.repository.CozinhaRespository;
+import com.example.demo.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -25,6 +26,9 @@ public class CozinhaController {
 	@Autowired
 	private CozinhaRespository cozinhaRespository;
 
+	@Autowired
+	private CadastroCozinhaService cadastroCozinha;
+	
 	@GetMapping 
 	public List<Cozinha> listar(){ 
 		return cozinhaRespository.listar();
@@ -33,7 +37,7 @@ public class CozinhaController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha){
-		return cozinhaRespository.salvar(cozinha);
+		return cadastroCozinha.salvar(cozinha);
 	}
 	
 	@GetMapping("/{id}")
