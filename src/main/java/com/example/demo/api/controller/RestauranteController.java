@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.demo.domain.exception.RestauranteNaoEncontradoException;
+import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.RestauranteRepository;
 import com.example.demo.domain.service.CadastroRestauranteService;
@@ -43,22 +43,30 @@ public class RestauranteController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	
 	@PutMapping("/{id}")
-	public ResponseEntity<Restaurante> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante){
-		Restaurante restaurantebusca = restauranteRepository.buscar(id);
-		if (restaurantebusca != null) {
-			BeanUtils.copyProperties(restaurante, restaurantebusca,"id");
-			restaurantebusca = cadastroRestaurante.salvar(restaurantebusca);
-			return ResponseEntity.ok(restaurantebusca);
+	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante){
+		try {
+			Restaurante restaurantebusca = restauranteRepository.buscar(id);
+			if (restaurantebusca != null) {
+				BeanUtils.copyProperties(restaurante, restaurantebusca, "id");
+				cadastroRestaurante.salvar(restaurantebusca);
+				return ResponseEntity.ok(restaurantebusca);
+			}
+			return ResponseEntity.notFound().build();		
+		} catch (EntidadeNaoEncontradaException e ) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		return ResponseEntity.notFound().build();		
+		
 	}
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante criar(@RequestBody Restaurante restaurante) {
-		return cadastroRestaurante.salvar(restaurante);
+	public ResponseEntity<?> criar(@RequestBody Restaurante restaurante) {
+		try {
+			restaurante = cadastroRestaurante.salvar(restaurante);
+			return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 	
 	@DeleteMapping("/{id}")
@@ -66,7 +74,7 @@ public class RestauranteController {
 		try {
 			cadastroRestaurante.remover(id);
 			return ResponseEntity.noContent().build();
-		} catch (RestauranteNaoEncontradoException e) {
+		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
