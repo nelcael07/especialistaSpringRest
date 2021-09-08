@@ -6,12 +6,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.model.Permissao;
 import com.example.demo.domain.repository.PermissaoRespository;
 
 
-@Component
+@Repository
 public class PermissaoRepositoryImpl implements PermissaoRespository {
 
 	@PersistenceContext
