@@ -1,5 +1,6 @@
 package com.example.demo.api.controller;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,12 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.RestauranteRepository;
 import com.example.demo.domain.service.CadastroRestauranteService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -77,11 +79,10 @@ public class RestauranteController {
 				cadastroRestaurante.salvar(restaurantebusca);
 				return ResponseEntity.ok(restaurantebusca);
 			}
-			return ResponseEntity.notFound().build();		
+			return ResponseEntity.notFound().build();	
 		} catch (EntidadeNaoEncontradaException e ) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
 	}
 	
 	// o map faz com que se tenha controle de todos os argumentos que se deseja atualizar 	
@@ -98,13 +99,30 @@ public class RestauranteController {
 		  } catch (EntidadeNaoEncontradaException e) {
 			  return ResponseEntity.badRequest().build();
 		  }
-		  
-	}
+		}	 
 	 
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Restaurante restauranteOrigem = objectMapper.convertValue(camposOrigem, Restaurante.class);
 		camposOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-			 
-		});
+			Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
+			//tornando acessiveo esse campo, por que o campo nome da classe restaurante é privado			
+			field.setAccessible(true);
+			System.out.println("");
+			System.out.println("CAMPO:");
+			System.out.println("");
+			System.out.println(field);
+			
+			//pegando o campo do field, ex: "nome".				
+			Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+			System.out.println("");
+			System.out.println("NOVO VALOR:");
+			System.out.println("");
+			System.out.println(novoValor);
+			
+			//estou setando no campo field de restauranteDestivo o valorPropriedade.  			
+			ReflectionUtils.setField(field, restauranteDestino, novoValor);
+ 		});
 	}
 	
 	
