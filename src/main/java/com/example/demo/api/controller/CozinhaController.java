@@ -32,8 +32,6 @@ public class CozinhaController {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 	
-	//PARA FAZER METODO QUE MUDEM ALGO NO BANCO SE USA O SERVICE
-	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha){

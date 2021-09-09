@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.model.Cozinha;
@@ -18,8 +19,8 @@ public class TesteController {
 	@Autowired
 	private CozinhaRespository cozinhaRepository;
 	
-	@GetMapping("/{nome}")
-	public List<Cozinha> buscarPorNome(@PathVariable String nome){
+	@GetMapping("/cozinhas/por-nome")
+	public List<Cozinha> buscarPorNome(@RequestParam String nome){
 		return cozinhaRepository.consultarPorNome(nome);
 	}
 }

@@ -85,7 +85,6 @@ public class RestauranteController {
 		}
 	}
 	
-	// o map faz com que se tenha controle de todos os argumentos que se deseja atualizar 	
 	@PatchMapping("/{id}")
 	 public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos){
 		  try {
@@ -106,21 +105,8 @@ public class RestauranteController {
 		Restaurante restauranteOrigem = objectMapper.convertValue(camposOrigem, Restaurante.class);
 		camposOrigem.forEach((nomePropriedade, valorPropriedade) -> {
 			Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-			//tornando acessiveo esse campo, por que o campo nome da classe restaurante é privado			
 			field.setAccessible(true);
-			System.out.println("");
-			System.out.println("CAMPO:");
-			System.out.println("");
-			System.out.println(field);
-			
-			//pegando o campo do field, ex: "nome".				
 			Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-			System.out.println("");
-			System.out.println("NOVO VALOR:");
-			System.out.println("");
-			System.out.println(novoValor);
-			
-			//estou setando no campo field de restauranteDestivo o valorPropriedade.  			
 			ReflectionUtils.setField(field, restauranteDestino, novoValor);
  		});
 	}

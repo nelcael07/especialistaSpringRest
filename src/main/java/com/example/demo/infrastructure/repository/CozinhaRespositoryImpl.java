@@ -24,7 +24,8 @@ public class CozinhaRespositoryImpl implements CozinhaRespository {
 	
 	@Override
 	public List<Cozinha> consultarPorNome(String nome) {
-		return manager.createQuery("from Cozinha where nome = :nome", Cozinha.class).setParameter("nome", nome).getResultList();
+		//ESSE CORINGA O LIKE FAZ ELE BUSCAR COM BASE NO QUE FOI DIGITADO EX: DIGITO A LETRA "A" ELE VAI BUSCAR AS QUE COMEÇA COM LETRA A, PARA USAR ISSO TENHO QUE COLOCAR O CORINGA NO SETPARAMETER.		
+		return manager.createQuery("from Cozinha where nome like :nome", Cozinha.class).setParameter("nome", "%"+ nome +"%").getResultList();
 	}
 	
 	@Transactional
