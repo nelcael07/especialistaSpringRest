@@ -1,6 +1,7 @@
 package com.example.demo.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,14 @@ public class CidadeController {
 	
 	@GetMapping
 	public List<Cidade> listar() {
-		return cidadeRepository.listar();
+		return cidadeRepository.findAll();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long id){
-		Cidade cidade = cidadeRepository.buscar(id);
-		if (cidade != null) {
-			return ResponseEntity.ok(cidade);
+		Optional<Cidade> cidade = cidadeRepository.findById(id);
+		if (cidade.isPresent()) {
+			return ResponseEntity.ok(cidade.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -46,11 +47,11 @@ public class CidadeController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Cidade> atualizar(@PathVariable Long id, @RequestBody Cidade cidade){
 		try {
-			Cidade cidadebusca = cidadeRepository.buscar(id);
-			if (cidadebusca != null) {
+			Optional<Cidade> cidadebusca = cidadeRepository.findById(id);
+			if (cidadebusca.isPresent()) {
 				BeanUtils.copyProperties(cidade, cidadebusca,"id");
-				cidadeService.salvar(cidadebusca);
-				return ResponseEntity.ok(cidadebusca);
+				cidadeService.salvar(cidadebusca.get());
+				return ResponseEntity.ok(cidadebusca.get());
 			}
 			return ResponseEntity.notFound().build();
 		} catch (EntidadeNaoEncontradaException e) {

@@ -1,6 +1,7 @@
 package com.example.demo.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +35,16 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<Estado> listar(){
-		return estadoRepository.listar();
+		return estadoRepository.findAll();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Estado> buscar(@PathVariable Long id) {
-		Estado estado = estadoRepository.buscar(id);
-		if (estado == null) {
+		Optional<Estado> estado = estadoRepository.findById(id);
+		if (estado.isEmpty()) {
 			return ResponseEntity.notFound().build() ;
 		}
-		return ResponseEntity.ok(estado);
+		return ResponseEntity.ok(estado.get());
 	}
 	
 	@PostMapping
@@ -54,11 +55,11 @@ public class EstadoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Estado> atualizar (@RequestBody Estado estado, @PathVariable Long id) {
-		Estado estadobusca = estadoRepository.buscar(id);
-		if (estadobusca != null) {
+		Optional<Estado> estadobusca = estadoRepository.findById(id);
+		if (estadobusca.isPresent()) {
 			BeanUtils.copyProperties(estado, estadobusca,"id");
-			cadastroEstado.salvar(estadobusca);
-			return ResponseEntity.ok(estadobusca);
+			cadastroEstado.salvar(estadobusca.get());
+			return ResponseEntity.ok(estadobusca.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
