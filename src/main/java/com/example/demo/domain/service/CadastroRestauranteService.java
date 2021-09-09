@@ -1,8 +1,11 @@
 package com.example.demo.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Restaurante;
@@ -20,11 +23,10 @@ public class CadastroRestauranteService {
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		Long id = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRespository.buscar(id);
-		if (cozinha == null) {
-			throw new EntidadeNaoEncontradaException(String.format("Cozinha com codigo %d não encontrada", id));
-		}
-		restaurante.getCozinha().setNome(cozinha.getNome());
+		// aqui basicamente eu to mandando ele retornar o Optional e verificar com o orelsethrow se vai ter algo de cozinha, se não tiver ele lança a exeção.		
+		Cozinha cozinha = cozinhaRespository.findById(id).orElseThrow(
+				()-> new EntidadeNaoEncontradaException(String.format("Cozinha com codigo %d não encontrada", id)));
+		restaurante.setCozinha(cozinha);
 		return restauranteRepository.salvar(restaurante);
 	}
 	

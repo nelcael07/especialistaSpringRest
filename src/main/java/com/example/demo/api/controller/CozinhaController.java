@@ -1,6 +1,8 @@
 package com.example.demo.api.controller;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -52,12 +54,12 @@ public class CozinhaController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
-		Cozinha cozinhabusca = cozinhaRespository.buscar(id);
-		if (cozinhabusca != null) {
+		Optional<Cozinha> cozinhabusca = cozinhaRespository.findById(id);
+		if (cozinhabusca.isPresent()) {
 			// estou compiando as propriedades de cozinha para cozinhabusca, menos o id			
-			BeanUtils.copyProperties(cozinha, cozinhabusca, "id");
-			cozinhabusca = cadastroCozinha.salvar(cozinhabusca);
-			return ResponseEntity.ok(cozinhabusca);
+			BeanUtils.copyProperties(cozinha, cozinhabusca.get(), "id");
+			Cozinha cozinhaCreated= cadastroCozinha.salvar(cozinhabusca.get());
+			return ResponseEntity.ok(cozinhaCreated);
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -66,9 +68,9 @@ public class CozinhaController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
-		Cozinha cozinha = cozinhaRespository.buscar(id);
-		if (cozinha != null) {
-			return ResponseEntity.ok(cozinha);
+		Optional<Cozinha> cozinha = cozinhaRespository.findById(id);
+		if (cozinha.isPresent()) {
+			return ResponseEntity.ok(cozinha.get());
 		}else {
 			return ResponseEntity.notFound().build();
 		}
@@ -76,7 +78,7 @@ public class CozinhaController {
 	
 	@GetMapping 
 	public List<Cozinha> listar(){ 
-		return cozinhaRespository.listar();
+		return cozinhaRespository.findAll();
 	}
 	
 	
