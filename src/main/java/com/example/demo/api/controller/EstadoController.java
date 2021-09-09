@@ -57,7 +57,7 @@ public class EstadoController {
 	public ResponseEntity<Estado> atualizar (@RequestBody Estado estado, @PathVariable Long id) {
 		Optional<Estado> estadobusca = estadoRepository.findById(id);
 		if (estadobusca.isPresent()) {
-			BeanUtils.copyProperties(estado, estadobusca,"id");
+			BeanUtils.copyProperties(estado, estadobusca.get(),"id");
 			cadastroEstado.salvar(estadobusca.get());
 			return ResponseEntity.ok(estadobusca.get());
 		}
