@@ -11,7 +11,9 @@ import com.example.demo.domain.model.Cozinha;
 @Repository
 public interface CozinhaRespository extends JpaRepository<Cozinha, Long> {
 
-	// o nome do metodo tem que ser com o nome de alguma propriedade.	
-	List<Cozinha> findByNome(String nome); 
+	//O spring data jpa tem algumas palavras chaves que podem ajudar ao fazer as consultas,
+	//o containing por exemplo, faz a função do like que é de buscar por palavras que contem aquele conjunto	
+	List<Cozinha> findByNomeContaining(String nome);
+	
 	Optional<Cozinha> findUnicoByNome(String nome);
 }
