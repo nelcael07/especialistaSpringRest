@@ -2,14 +2,11 @@ package com.example.demo.infrastructure.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.stereotype.Repository;
-
 import com.example.demo.domain.model.Restaurante;
-import com.example.demo.domain.repository.RestauranteRespositoryQueries;
+import com.example.demo.respository.queries.RestauranteRespositoryQueries;
 
 //A VANTAGEM É QUE QUANDO SE COLOCA A CONSULTA AQUI, ELA FICA EM CODIGO JAVA E COM ISSO SE PODE FAZER VARIAS COISAS.
 
