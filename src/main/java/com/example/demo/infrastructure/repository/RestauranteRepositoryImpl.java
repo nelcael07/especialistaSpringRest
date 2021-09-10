@@ -2,17 +2,16 @@ package com.example.demo.infrastructure.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.respository.queries.RestauranteRespositoryQueries;
+import javax.persistence.criteria.Predicate;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries {
@@ -23,19 +22,22 @@ public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries 
 	
 	@Override
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
-				//criteriabuilder é a construtura das querys, eu uso para dizer qual query quero criar.		
 				CriteriaBuilder builder = manager.getCriteriaBuilder();
 				
-				//o criteriaquery é os criterios da query.		
 				CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
 				
-				//adicionando criterios a query		
-				criteria.from(Restaurante.class); // from restaurante
+				Root<Restaurante> root = criteria.from(Restaurante.class);
 				
-				//o createQuery retorna sempre uma typedQuery.		
+				Predicate nomePredicate = builder.like(root.get("nome"), "%"+ nome +"%");
+				Predicate taxaInicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
+				Predicate taxaFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
+
+				//adicionando uma clausula no criteria				
+				criteria.where(nomePredicate, taxaInicialPredicate, taxaFinalPredicate);
+				
 				TypedQuery<Restaurante> query = manager.createQuery(criteria);
 				 
-				return manager.createQuery("from Restaurante",Restaurante.class).getResultList();
+				return query.getResultList();
 				
 	}
 }
