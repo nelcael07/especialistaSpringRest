@@ -5,15 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.domain.model.Restaurante;
 
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, RestauranteRespositoryQueries{
 	
 	List<Restaurante> getByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 	
-	//vai buscar no orm.xml a query dessa consulta	
 	List<Restaurante> consultarPorNome(String nome, Long id);
 	
 	Optional<Restaurante> getFirstByNomeContaining(String nome);
@@ -21,4 +19,5 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
 	List<Restaurante> getTop2ByNomeContaining(String nome);
 	
 	int countByCozinhaId(Long id);
+	
 }

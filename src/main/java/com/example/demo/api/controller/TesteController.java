@@ -66,4 +66,10 @@ public class TesteController {
 		return restauranteRepository.countByCozinhaId(id);
 	}
 	
+	@GetMapping("/restaurantes/find")
+	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
+		//find está dentro de RestauranteRepository, mas a sua consulta JPQL está no Repository personalizado.		
+		return restauranteRepository.find(nome,taxaFreteInicial, taxaFreteFinal);
+	}
+	
 }
