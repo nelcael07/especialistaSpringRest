@@ -1,13 +1,16 @@
 package com.example.demo.infrastructure.repository;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
+
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.respository.queries.RestauranteRespositoryQueries;
 
@@ -17,34 +20,22 @@ public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries 
 	@PersistenceContext
 	private EntityManager manager;
 	
+	
 	@Override
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
-		var jpql = new StringBuilder();
-		jpql.append("from Restaurante where 0 = 0 ");
-
-		var parametros = new HashMap<String, Object>();
-		
-		if (StringUtils.hasLength(nome)) {
-			jpql.append("and nome like:nome ");
-			parametros.put("nome", "%"+nome+"%");
-		}
-		
-		if(taxaFreteInicial != null) {
-			jpql.append("and taxaFrete >= :taxaFreteInicial ");
-			parametros.put("taxaFreteInicial", taxaFreteInicial);
-		}
-		
-		if (taxaFreteFinal != null) {
-			jpql.append("and taxaFrete <= :taxaFreteFinal");
-			parametros.put("taxaFreteFinal", taxaFreteFinal);
-		}
-		
-		TypedQuery<Restaurante> query = manager.createQuery(jpql.toString(), Restaurante.class);
+				//criteriabuilder é a construtura das querys, eu uso para dizer qual query quero criar.		
+				CriteriaBuilder builder = manager.getCriteriaBuilder();
 				
-		parametros.forEach((chave, valor)->{
-			query.setParameter(chave, valor);
-		});
-		
-		return query.getResultList();
+				//o criteriaquery é os criterios da query.		
+				CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
+				
+				//adicionando criterios a query		
+				criteria.from(Restaurante.class); // from restaurante
+				
+				//o createQuery retorna sempre uma typedQuery.		
+				TypedQuery<Restaurante> query = manager.createQuery(criteria);
+				 
+				return manager.createQuery("from Restaurante",Restaurante.class).getResultList();
+				
 	}
 }
