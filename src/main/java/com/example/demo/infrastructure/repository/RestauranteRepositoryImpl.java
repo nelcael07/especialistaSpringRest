@@ -1,17 +1,21 @@
 package com.example.demo.infrastructure.repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 import com.example.demo.domain.model.Restaurante;
+import org.springframework.util.StringUtils;
 import com.example.demo.respository.queries.RestauranteRespositoryQueries;
-import javax.persistence.criteria.Predicate;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries {
@@ -28,12 +32,27 @@ public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries 
 				
 				Root<Restaurante> root = criteria.from(Restaurante.class);
 				
-				Predicate nomePredicate = builder.like(root.get("nome"), "%"+ nome +"%");
-				Predicate taxaInicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
-				Predicate taxaFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
-
-				//adicionando uma clausula no criteria				
-				criteria.where(nomePredicate, taxaInicialPredicate, taxaFinalPredicate);
+				Predicate nomePredicate;
+				Predicate taxaInicialPredicate;
+				Predicate taxaFinalPredicate;
+				
+				var predicates = new ArrayList<Predicate>();
+				
+				
+				if (StringUtils.hasText(nome)) {
+					predicates.add( builder.like(root.get("nome"), "%"+ nome +"%"));
+				}
+				
+				if (taxaFreteInicial!=null) {
+					predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+				}
+				
+				if (taxaFreteFinal != null) {
+					predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+				}
+				
+				criteria.where(predicates.toArray(new Predicate[0]));  
+				
 				
 				TypedQuery<Restaurante> query = manager.createQuery(criteria);
 				 
