@@ -1,4 +1,4 @@
-package com.example.demo.respository.queries;
+package com.example.demo.infrastructure.respository.queries;
 
 import java.math.BigDecimal;
 import java.util.List;

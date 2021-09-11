@@ -2,7 +2,6 @@ package com.example.demo.infrastructure.repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,10 +11,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
-import com.example.demo.domain.model.Restaurante;
 import org.springframework.util.StringUtils;
-import com.example.demo.respository.queries.RestauranteRespositoryQueries;
+
+import com.example.demo.domain.model.Restaurante;
+import com.example.demo.infrastructure.respository.queries.RestauranteRespositoryQueries;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries {
@@ -26,18 +27,17 @@ public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries 
 	
 	@Override
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
+				//builder é uma instacia de criteriaBuilder.		
 				CriteriaBuilder builder = manager.getCriteriaBuilder();
 				
+				//criteria é uma consulta.
 				CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
 				
+				//root é a raiz da pesquisa.
 				Root<Restaurante> root = criteria.from(Restaurante.class);
 				
-				Predicate nomePredicate;
-				Predicate taxaInicialPredicate;
-				Predicate taxaFinalPredicate;
-				
+				//predicates é os predicados da consulta.				
 				var predicates = new ArrayList<Predicate>();
-				
 				
 				if (StringUtils.hasText(nome)) {
 					predicates.add( builder.like(root.get("nome"), "%"+ nome +"%"));
@@ -52,7 +52,6 @@ public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries 
 				}
 				
 				criteria.where(predicates.toArray(new Predicate[0]));  
-				
 				
 				TypedQuery<Restaurante> query = manager.createQuery(criteria);
 				 

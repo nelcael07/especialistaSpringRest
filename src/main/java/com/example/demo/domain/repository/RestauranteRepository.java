@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.domain.model.Restaurante;
-import com.example.demo.respository.queries.RestauranteRespositoryQueries;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-//IMPLEMENTA RESTAURANTERESPOSITORYQUERIES PARA TER O METODO FIND
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, RestauranteRespositoryQueries{
+import com.example.demo.domain.model.Restaurante;
+import com.example.demo.infrastructure.respository.queries.RestauranteRespositoryQueries;
+
+//implementar JpaspecificationExecutor faz com que possa ser utilzado spec nessa classe.
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, RestauranteRespositoryQueries, 
+				JpaSpecificationExecutor<Restaurante>{
 	
 	List<Restaurante> getByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 

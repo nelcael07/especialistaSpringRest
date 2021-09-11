@@ -14,6 +14,8 @@ import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.CozinhaRespository;
 import com.example.demo.domain.repository.RestauranteRepository;
+import com.example.demo.infrastructure.repository.spec.RestaurantComNomeSemelhanteSpec;
+import com.example.demo.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
 
 @RestController
 @RequestMapping("/teste")
@@ -71,6 +73,14 @@ public class TesteController {
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
 		//find está dentro de RestauranteRepository, mas a sua consulta JPQL está no Repository personalizado.		
 		return restauranteRepository.find(nome,taxaFreteInicial, taxaFreteFinal);
+	}
+	
+	@GetMapping("/restaurantes/restauranteComFreteGratis")
+	public List<Restaurante> restauranteComFreteGratis (String nome){
+		var comFreteGratis = new RestauranteComFreteGratisSpec();
+		var comNomeSemelhante = new RestaurantComNomeSemelhanteSpec(nome);
+		
+		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
 	}
 	
 }
