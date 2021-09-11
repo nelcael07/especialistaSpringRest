@@ -13,7 +13,7 @@ import com.example.demo.infrastructure.respository.queries.RestauranteRespositor
 
 //implementar JpaspecificationExecutor faz com que possa ser utilzado spec nessa classe.
 @Primary
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, RestauranteRespositoryQueries, 
+public interface RestauranteRepository extends CustomJpaRepository<Restaurante, Long>, RestauranteRespositoryQueries, 
 				JpaSpecificationExecutor<Restaurante>{
 	
 	List<Restaurante> getByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
