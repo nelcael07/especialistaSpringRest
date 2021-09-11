@@ -8,5 +8,8 @@ import com.example.demo.domain.model.Restaurante;
 public interface RestauranteRespositoryQueries {
 
 	List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal);
+	
+	List<Restaurante> findComFreteGratis(String nome);
+	
 
 }

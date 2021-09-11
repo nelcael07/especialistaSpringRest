@@ -14,8 +14,7 @@ import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.CozinhaRespository;
 import com.example.demo.domain.repository.RestauranteRepository;
-import com.example.demo.infrastructure.repository.spec.RestaurantComNomeSemelhanteSpec;
-import com.example.demo.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
+import com.example.demo.infrastructure.respository.queries.RestauranteRespositoryQueries;
 
 @RestController
 @RequestMapping("/teste")
@@ -26,6 +25,10 @@ public class TesteController {
 	
 	@Autowired
 	private RestauranteRepository restauranteRepository;
+	
+	@Autowired
+	private RestauranteRespositoryQueries Restaurantequeries;
+	
 	
 	@GetMapping("/cozinhas/por-nome")
 	public List<Cozinha> nome(@RequestParam String nome){
@@ -77,10 +80,7 @@ public class TesteController {
 	
 	@GetMapping("/restaurantes/restauranteComFreteGratis")
 	public List<Restaurante> restauranteComFreteGratis (String nome){
-		var comFreteGratis = new RestauranteComFreteGratisSpec();
-		var comNomeSemelhante = new RestaurantComNomeSemelhanteSpec(nome);
-		
-		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+		return Restaurantequeries.findComFreteGratis(nome);
 	}
 	
 }
