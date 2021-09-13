@@ -40,7 +40,6 @@ public class TesteController {
 		return cozinhaRepository.findUnicoByNome(nome);
 	}
 	
-	//quando não coloca nada nos atributos o spring acredita que eles serão passados como params da uri.	
 	@GetMapping("/restaurantes/entre-inicial-final")
 	public List<Restaurante> findByTaxaFreteBetween(BigDecimal inicial, BigDecimal ultima){
 		return restauranteRepository.getByTaxaFreteBetween(inicial, ultima);
@@ -71,12 +70,12 @@ public class TesteController {
 	public int contador(Long id) {
 		return restauranteRepository.countByCozinhaId(id);
 	}
-	
-	@GetMapping("/restaurantes/find")
-	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
-		//find está dentro de RestauranteRepository, mas a sua consulta JPQL está no Repository personalizado.		
-		return restauranteRepository.find(nome,taxaFreteInicial, taxaFreteFinal);
-	}
+//	
+//	@GetMapping("/restaurantes/find")
+//	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
+//		//find está dentro de RestauranteRepository, mas a sua consulta JPQL está no Repository personalizado.		
+//		return restauranteRepository.find(nome,taxaFreteInicial, taxaFreteFinal);
+//	}
 	
 	@GetMapping("/restaurantes/restauranteComFreteGratis")
 	public List<Restaurante> restauranteComFreteGratis (String nome){
