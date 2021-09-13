@@ -38,10 +38,9 @@ public class Restaurante {
 	@JoinColumn( nullable = false )
 	private Cozinha cozinha;
 	
-	// essa propriedade  é uma propriedade compartilhada, um @Embeddable, é de um tipo incorporado.
+	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
-	
 	
 	@JsonIgnore
 	@ManyToMany
