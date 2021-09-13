@@ -30,11 +30,4 @@ public class Cozinha {
 	@Column(nullable = false)
 	private String nome;
 	
-	//	to mandando ignorar esse elemento no json.
-	@JsonIgnore	
-	//no mappedBy eu tenho que adicionar como é o nome do dono da associação.
-	//nesse caso tenho que colocar o nome da propriedade de cozinha na entity restaurante.	
-	@OneToMany(mappedBy = "cozinha")
-	private List<Restaurante> restaurantes = new ArrayList<>();
-	
 }
