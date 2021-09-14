@@ -20,8 +20,6 @@ insert into  usuario_grupo (usuario_id, grupo_id) values (1,2), (1,1), (2,1), (2
 
 insert into grupo_permissao values(2, 1), (2,2), (1,2)
 
-
-
 insert into cozinha (nome) values ('Tailandesa');
 insert into cozinha (nome) values ('Brasileira');
 insert into cozinha (nome) values ('Italiana');
