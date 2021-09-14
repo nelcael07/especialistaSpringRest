@@ -50,9 +50,7 @@ public class RestauranteController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	
-	
-	@PostMapping
+	@PostMapping 
 	public ResponseEntity<?> criar(@RequestBody Restaurante restaurante) {
 		try {
 			restaurante = cadastroRestaurante.salvar(restaurante);
