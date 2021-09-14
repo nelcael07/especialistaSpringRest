@@ -17,6 +17,9 @@ insert into restaurante (nome,taxa_frete, cozinha_id, data_cadastro, data_atuali
 insert into restaurante (nome,taxa_frete, cozinha_id,data_cadastro, data_atualizacao) values ('Carolina', 25, 1, utc_timestamp, utc_timestamp);
 insert into restaurante (nome,taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Pampas', 35, 2, utc_timestamp, utc_timestamp);
 
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('marmita', 'sai na hora', 20, true, 1);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('self service', 'pode comer a vontade', 33, true, 2);
+
 insert into forma_pagamento(descricao) values ('cartão de credito')
 insert into forma_pagamento(descricao) values ('cartão de debito')
 
