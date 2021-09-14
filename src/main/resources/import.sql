@@ -21,6 +21,7 @@ insert into  usuario_grupo (usuario_id, grupo_id) values (1,2), (1,1), (2,1), (2
 insert into grupo_permissao values(2, 1), (2,2), (1,2)
 
 
+
 insert into cozinha (nome) values ('Tailandesa');
 insert into cozinha (nome) values ('Brasileira');
 insert into cozinha (nome) values ('Italiana');
@@ -30,12 +31,10 @@ insert into restaurante (nome,taxa_frete, cozinha_id, data_cadastro, data_atuali
 insert into restaurante (nome,taxa_frete, cozinha_id,data_cadastro, data_atualizacao) values ('Carolina', 25, 1, utc_timestamp, utc_timestamp);
 insert into restaurante (nome,taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Pampas', 35, 2, utc_timestamp, utc_timestamp);
 
-
+insert into forma_pagamento(descricao) values ('cartão de credito')
+insert into forma_pagamento(descricao) values ('cartão de debito')
 
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('marmita', 'sai na hora', 20, true, 1);
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('self service', 'pode comer a vontade', 33, true, 2);
-
-insert into forma_pagamento(descricao) values ('cartão de credito')
-insert into forma_pagamento(descricao) values ('cartão de debito')
 
 insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1,1), (1,2), (2,2), (3,1), (3,2);

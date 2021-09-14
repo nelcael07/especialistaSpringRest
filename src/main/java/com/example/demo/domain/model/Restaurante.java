@@ -14,8 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,6 +37,7 @@ public class Restaurante {
 	private BigDecimal taxaFrete;
 	
 	@ManyToOne	
+	// nullable faz ele executar um inner join na consulta
 	@JoinColumn( nullable = false )
 	private Cozinha cozinha;
 	
@@ -64,8 +63,4 @@ public class Restaurante {
 	) 
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 	
-	
-//	@OneToMany(mappedBy = "restaurante")
-//	private List<Produto> produto = new ArrayList<>();
-	
-}	
+ 	}	
