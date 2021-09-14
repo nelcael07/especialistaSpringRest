@@ -2,6 +2,7 @@ package com.example.demo.api.controller;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Produto;
 import com.example.demo.domain.repository.ProdutoRepository;
+import com.example.demo.domain.service.CadastroProdutoService;
 
 @RestController
 @RequestMapping("/produtos")
@@ -23,6 +26,9 @@ public class ProdutoController {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+	@Autowired
+	private CadastroProdutoService produtoService;
 	
 	@GetMapping
 	public List<Produto> listar(){
@@ -43,8 +49,8 @@ public class ProdutoController {
 		try {
 			Optional <Produto> produtobuscado = produtoRepository.findById(id);
 			if (produtobuscado.isPresent()) {
-				BeanUtils.copyProperties(produto, produtobuscado, "id");
-				Produto produtosalvo = produtoRepository.save(produtobuscado.get());
+				BeanUtils.copyProperties(produto, produtobuscado.get(), "id");
+				Produto produtosalvo = produtoService.salvar(produtobuscado.get());
 				return ResponseEntity.ok(produtosalvo);
 			}
 			return ResponseEntity.notFound().build();
@@ -56,7 +62,7 @@ public class ProdutoController {
 	@PostMapping
 	public ResponseEntity<?> criar(@RequestBody Produto produto) {
 		try {
-			produto = produtoRepository.save(produto);
+			produto = produtoService.salvar(produto);
 			return ResponseEntity.ok(produto);
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
@@ -67,7 +73,7 @@ public class ProdutoController {
 	public ResponseEntity<?> remover(@PathVariable Long id){
 		Optional<Produto> produto = produtoRepository.findById(id);
 		if (produto.isPresent()) {
-			produtoRepository.deleteById(id);
+			produtoService.remover(id);
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.notFound().build();

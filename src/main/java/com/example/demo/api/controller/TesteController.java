@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Restaurante;
+import com.example.demo.domain.model.Usuario;
 import com.example.demo.domain.repository.CozinhaRespository;
 import com.example.demo.domain.repository.RestauranteRepository;
+import com.example.demo.domain.repository.UsuarioRepository;
 import com.example.demo.infrastructure.respository.queries.RestauranteRespositoryQueries;
 
 @RestController
@@ -29,6 +31,8 @@ public class TesteController {
 	@Autowired
 	private RestauranteRespositoryQueries Restaurantequeries;
 	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 	
 	@GetMapping("/cozinhas/por-nome")
 	public List<Cozinha> nome(@RequestParam String nome){
@@ -92,5 +96,11 @@ public class TesteController {
 	public Optional<Cozinha> cozinhaPrimeiro(){
 		return cozinhaRepository.buscarPrimeiro();
 	}
+	
+	@GetMapping("/grupos")
+	public List<Usuario> listarGrupos (){
+		return usuarioRepository.findAll(); 
+	}
+	
 	
 }

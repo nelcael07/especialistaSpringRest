@@ -19,12 +19,10 @@ public class CadastroProdutoService {
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
-	
-	public Produto save(Produto produto) {
+	public Produto salvar(Produto produto) {
 		Long id  = produto.getRestaurante().getId();
 		Restaurante restaurante = restauranteRepository.findById(id).orElseThrow(
-				() -> new EntidadeNaoEncontradaException("Não existe restaurante com esse id")
-		);
+				() -> new EntidadeNaoEncontradaException(String.format("Restaurante %d não encontrado", id)));
 		produto.setRestaurante(restaurante);
 		return produtoRespository.save(produto);
 	}

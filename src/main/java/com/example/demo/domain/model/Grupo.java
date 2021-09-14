@@ -2,7 +2,6 @@ package com.example.demo.domain.model;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,20 +13,24 @@ import javax.persistence.ManyToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = false)
-public class Permissao {
-	
-	@EqualsAndHashCode.Include
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
+public class Grupo {
+
 	@Id
-	@GeneratedValue( strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
+	@JoinColumn(nullable = false)
 	private String nome;
 	
-	@Column(nullable = false)
-	private String descricao;
-	
+	@ManyToMany
+	@JoinTable(
+			name = "grupo_permissao",
+			joinColumns = @JoinColumn(name = "grupo_id"),
+			inverseJoinColumns = @JoinColumn(name = "permissao_id")
+	)
+	private List<Permissao> permissao;
 }
