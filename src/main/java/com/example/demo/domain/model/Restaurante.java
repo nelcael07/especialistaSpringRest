@@ -55,6 +55,8 @@ public class Restaurante {
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataAtualizacao;
 	
+	
+	
 	@JsonIgnore
 	@ManyToMany
  	@JoinTable(name = "restaurante_forma_pagamento", 
