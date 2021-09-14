@@ -44,14 +44,14 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 	
-	//adiciona data e hora que a entity é criada
+	@JsonIgnore
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataCadastro;
-	
-	//vai adicionar data e hora que a entity é atualizada, essa anotação é do hibernate e só funciona se o projeto estiver usando o hibernate	
+
+	@JsonIgnore
 	@UpdateTimestamp
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataAtualizacao;
 	
 	@JsonIgnore
