@@ -30,6 +30,7 @@ public class RestauranteRepositoryImpl implements RestauranteRespositoryQueries 
 	}
 	
 	
+	
 //	@Override
 //	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
 //		CriteriaBuilder builder = manager.getCriteriaBuilder();

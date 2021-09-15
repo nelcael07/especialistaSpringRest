@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,7 +41,6 @@ public class Restaurante {
 	private BigDecimal taxaFrete;
 	
 	@JsonIgnoreProperties("hibernateLazyInitializer")
-	//mandando a toOne carregar só se for necessario utilizando o lazy.
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn( nullable = false )
 	private Cozinha cozinha;
@@ -58,13 +59,19 @@ public class Restaurante {
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataAtualizacao;
 	 
-	@JsonIgnore
-	//fazendo ele ter um select ansioso.
-	@ManyToMany(fetch = FetchType.EAGER )
+	//@JsonIgnore
+	@ManyToMany
  	@JoinTable(name = "restaurante_forma_pagamento", 
 			 joinColumns = @JoinColumn(name = "restaurante_id"),
 			 inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id")
 	) 
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 	
- 	}	
+	@JsonIgnore
+	@OneToMany(mappedBy = "restaurante")
+	private List<Produto> produto = new ArrayList<>();
+	
+	
+	
+	
+}	
