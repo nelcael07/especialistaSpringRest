@@ -3,13 +3,18 @@ package com.example.demo.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.example.demo.domain.exception.EntidadeEmUsoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.repository.CozinhaRespository;
 
-@Service
+//CLASS DE DOMAIN NÃO TEM CONTATO COM STATUS HTTPS.
+
+@Service 
 public class CadastroCozinhaService {
 	
 	@Autowired
