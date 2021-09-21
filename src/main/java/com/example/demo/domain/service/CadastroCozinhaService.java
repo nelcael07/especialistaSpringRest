@@ -17,10 +17,9 @@ import com.example.demo.domain.repository.CozinhaRespository;
 @Service 
 public class CadastroCozinhaService {
 	
-	//CONSTANTES DE MENSAGEMS	
 	private static final String MSG_COZINHA_EM_USO = "Cozinha de codigo %d não pode ser removida, ela está sendo usada";
 
-	private static final String MSG_COZINHA_NAO_ENCONTRADA   = "Não existe um cadastro de cozinha com o codigo: %d";
+	private static final String MSG_COZINHA_NAO_ENCONTRADA   = "Cozinha %d não encontrada.";
 	
 	@Autowired
 	private CozinhaRespository cozinhaRepository;
@@ -39,6 +38,7 @@ public class CadastroCozinhaService {
 			throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO , id));
 		}
 	}
+	
 	public Cozinha buscar(Long id) {
 		return cozinhaRepository.findById(id)
 				.orElseThrow(()-> new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, id)));

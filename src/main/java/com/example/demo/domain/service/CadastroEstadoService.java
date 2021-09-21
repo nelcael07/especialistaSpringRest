@@ -12,6 +12,10 @@ import com.example.demo.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 	
+	private static final String ESTADO_NÃO_ENCONTRADO = "Estado %d não encontrado.";
+	
+	private static final String ESTADO_EM_USO = "Estado %d está sendo usado por alguma cidade";
+	
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
@@ -23,10 +27,15 @@ public class CadastroEstadoService {
 		try {
 			estadoRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não foi encontrado nenhum estado com o id %d", id));
+			throw new EntidadeNaoEncontradaException(String.format(ESTADO_NÃO_ENCONTRADO, id));
 		}catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Esse estado %d está sendo utilizado por alguma cidade", id));
+			throw new EntidadeEmUsoException(String.format(ESTADO_EM_USO, id));
 		}
+	}
+	
+	public Estado buscar(Long id) {
+		return estadoRepository.findById(id).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(String.format(ESTADO_NÃO_ENCONTRADO, id)));
 	}
 	
 }

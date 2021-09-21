@@ -36,47 +36,25 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Produto> buscar(@PathVariable Long id) {
-		Optional <Produto> produto = produtoRepository.findById(id);
-		if (produto.isPresent()) {
-			return ResponseEntity.ok(produto.get());
-		}
-		return ResponseEntity.notFound().build();
+	public Produto buscar(@PathVariable Long id) {
+		return produtoService.buscar(id);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto){
-		try {
-			Optional <Produto> produtobuscado = produtoRepository.findById(id);
-			if (produtobuscado.isPresent()) {
-				BeanUtils.copyProperties(produto, produtobuscado.get(), "id");
-				Produto produtosalvo = produtoService.salvar(produtobuscado.get());
-				return ResponseEntity.ok(produtosalvo);
-			}
-			return ResponseEntity.notFound().build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().build();
-		}
+	public Produto atualizar(@PathVariable Long id, @RequestBody Produto produto){
+		Produto produtobuscado = produtoService.buscar(id);
+		BeanUtils.copyProperties(produto, produtobuscado, "id");
+		return produtoService.salvar(produtobuscado);
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> criar(@RequestBody Produto produto) {
-		try {
-			produto = produtoService.salvar(produto);
-			return ResponseEntity.ok(produto);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	public Produto criar(@RequestBody Produto produto) {
+		return produtoService.salvar(produto);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id){
-		Optional<Produto> produto = produtoRepository.findById(id);
-		if (produto.isPresent()) {
-			produtoService.remover(id);
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.notFound().build();
+	public void remover(@PathVariable Long id){
+		produtoService.remover(id);
 	}
 	
 	

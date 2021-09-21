@@ -12,18 +12,18 @@ import com.example.demo.domain.repository.RestauranteRepository;
 @Service
 public class CadastroRestauranteService {
 	
+	private static final String MSG_RESTAURANTE_NÃO_ENCONTRADO = "Restaurante %d não encontrado";
+
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CozinhaRespository cozinhaRespository;
+	private CadastroCozinhaService cadastroCozinha;
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		Long id = restaurante.getCozinha().getId();
-		// aqui basicamente eu to mandando ele retornar o Optional e verificar com o orelsethrow se vai ter algo de cozinha, se não tiver ele lança a exeção.		
-		Cozinha cozinha = cozinhaRespository.findById(id).orElseThrow(
-				()-> new EntidadeNaoEncontradaException(String.format("Cozinha com codigo %d não encontrada", id)));
-		restaurante.setCozinha(cozinha);
+		Cozinha cozinhabuscada = cadastroCozinha.buscar(id);
+		restaurante.setCozinha(cozinhabuscada);
 		return restauranteRepository.save(restaurante);
 	}
 	
@@ -31,8 +31,13 @@ public class CadastroRestauranteService {
 		try {
 			restauranteRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Restaurante %d não encontrado", id));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NÃO_ENCONTRADO, id));
 		}
+	}
+	
+	public Restaurante buscar(Long id) {
+		return restauranteRepository.findById(id).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NÃO_ENCONTRADO, id)));
 	}
 	
 	

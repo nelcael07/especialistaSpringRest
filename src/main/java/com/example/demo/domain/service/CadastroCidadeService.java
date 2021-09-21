@@ -12,25 +12,37 @@ import com.example.demo.domain.repository.EstadoRepository;
 @Service
 public class CadastroCidadeService {
 	
+	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Estado %d não encontrada.";
+
+	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Cidade %d não encontrada.";
+
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
+	@Autowired
+	private CadastroEstadoService cadastroEstado;
+	
 	public void remover(Long id) {
 		try {
 			cidadeRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não existe cidade com o id %d", id));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id));
 		}
 	}
 	
 	public Cidade salvar(Cidade cidade) {
 		Long id = cidade.getEstado().getId();
-		Estado estado = estadoRepository.findById(id).orElseThrow(() ->
-			new EntidadeNaoEncontradaException(String.format("Estado com id %d não encontrada", id)));
+		Estado estado = cadastroEstado.buscar(id);
 		cidade.setEstado(estado);
 		return cidadeRepository.save(cidade);
 	}
+	
+	public Cidade buscar(Long id) {
+		return cidadeRepository.findById(id).orElseThrow(
+				()-> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id)));
+	}
+	
 }
