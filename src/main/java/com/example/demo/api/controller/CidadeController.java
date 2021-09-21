@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
+import com.example.demo.domain.exception.EstadoNaoEncontradoException;
 import com.example.demo.domain.exception.NegocioException;
 import com.example.demo.domain.model.Cidade;
 import com.example.demo.domain.repository.CidadeRepository;
@@ -49,8 +50,8 @@ public class CidadeController {
 		BeanUtils.copyProperties(cidade, cidadebuscada, "id");
 		try{
 			return cidadeService.salvar(cidadebuscada);
-		}catch (EntidadeNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+		}catch (EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
@@ -59,8 +60,8 @@ public class CidadeController {
 	public Cidade criar(@RequestBody Cidade cidade) {
 		try {
 			return cidadeService.salvar(cidade);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+		} catch (EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
