@@ -50,7 +50,7 @@ public class CozinhaController {
 	public Cozinha buscar(@PathVariable Long id) {
 		return cadastroCozinha.buscar(id);
 	}
-	
+	  
 	@GetMapping 
 	public List<Cozinha> listar(){ 
 		return cozinhaRespository.findAll();

@@ -12,15 +12,10 @@ import com.example.demo.domain.repository.EstadoRepository;
 @Service
 public class CadastroCidadeService {
 	
-	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Estado %d não encontrada.";
-
 	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Cidade %d não encontrada.";
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
-	
-	@Autowired
-	private EstadoRepository estadoRepository;
 	
 	@Autowired
 	private CadastroEstadoService cadastroEstado;
