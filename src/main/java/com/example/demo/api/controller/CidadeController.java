@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
+import com.example.demo.domain.exception.NegocioException;
 import com.example.demo.domain.model.Cidade;
 import com.example.demo.domain.repository.CidadeRepository;
 import com.example.demo.domain.service.CadastroCidadeService;
@@ -46,13 +47,21 @@ public class CidadeController {
 	public Cidade atualizar(@PathVariable Long id, @RequestBody Cidade cidade){
 		Cidade cidadebuscada = cidadeService.buscar(id);
 		BeanUtils.copyProperties(cidade, cidadebuscada, "id");
-		return cidadeService.salvar(cidadebuscada);
+		try{
+			return cidadeService.salvar(cidadebuscada);
+		}catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cidade criar(@RequestBody Cidade cidade) {
-		return cidadeService.salvar(cidade);
+		try {
+			return cidadeService.salvar(cidade);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	@DeleteMapping("/{id}")

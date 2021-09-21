@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
+import com.example.demo.domain.exception.NegocioException;
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.RestauranteRepository;
@@ -49,7 +50,11 @@ public class RestauranteController {
 	
 	@PostMapping 
 	public Restaurante criar(@RequestBody Restaurante restaurante) {
-		return cadastroRestaurante.salvar(restaurante);
+		try {
+			return cadastroRestaurante.salvar(restaurante);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	@DeleteMapping("/{id}")
@@ -61,16 +66,13 @@ public class RestauranteController {
 	public Restaurante atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante){
 		Restaurante restaurantebuscado = cadastroRestaurante.buscar(id);
 		BeanUtils.copyProperties(restaurante, restaurantebuscado, "id", "dataCadastro");
-		return cadastroRestaurante.salvar(restaurantebuscado);
+		try {
+			return cadastroRestaurante.salvar(restaurantebuscado);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
-	
-//	@PutMapping("/{id}")
-//	public Cozinha atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
-//		Cozinha cozinhabusca = cadastroCozinha.buscar(id);
-//		BeanUtils.copyProperties(cozinha, cozinhabusca, "id");
-//		return cadastroCozinha.salvar(cozinhabusca);
-//	}
-	
+
 	@PatchMapping("/{id}")
 	 public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos){
 		Restaurante restaurantebuscado = cadastroRestaurante.buscar(id);
