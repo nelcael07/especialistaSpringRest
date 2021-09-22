@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
+import com.example.demo.domain.exception.RestauranteNaoEncontradoException;
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.CozinhaRespository;
@@ -11,8 +12,6 @@ import com.example.demo.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
-	
-	private static final String MSG_RESTAURANTE_NÃO_ENCONTRADO = "Restaurante %d não encontrado";
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
@@ -31,13 +30,13 @@ public class CadastroRestauranteService {
 		try {
 			restauranteRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NÃO_ENCONTRADO, id));
+			throw new RestauranteNaoEncontradoException(id);
 		}
 	}
 	
 	public Restaurante buscar(Long id) {
 		return restauranteRepository.findById(id).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NÃO_ENCONTRADO, id)));
+				() -> new RestauranteNaoEncontradoException(id));
 	}
 	
 	

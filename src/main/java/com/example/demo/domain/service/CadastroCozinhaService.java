@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.demo.domain.exception.CozinhaNaoEncontradoException;
 import com.example.demo.domain.exception.EntidadeEmUsoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Cozinha;
@@ -19,8 +20,6 @@ public class CadastroCozinhaService {
 	
 	private static final String MSG_COZINHA_EM_USO = "Cozinha de codigo %d não pode ser removida, ela está sendo usada";
 
-	private static final String MSG_COZINHA_NAO_ENCONTRADA   = "Cozinha %d não encontrada.";
-	
 	@Autowired
 	private CozinhaRespository cozinhaRepository;
 	
@@ -32,7 +31,7 @@ public class CadastroCozinhaService {
 		try {
 			cozinhaRepository.deleteById(id);
 		}catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, id));
+			throw new CozinhaNaoEncontradoException(id);
 		}
 		catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO , id));
@@ -41,7 +40,7 @@ public class CadastroCozinhaService {
 	
 	public Cozinha buscar(Long id) {
 		return cozinhaRepository.findById(id)
-				.orElseThrow(()-> new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_ENCONTRADA, id)));
+				.orElseThrow(()-> new CozinhaNaoEncontradoException(id));
 	}
 	
 	

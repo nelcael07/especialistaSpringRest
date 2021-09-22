@@ -3,6 +3,8 @@ package com.example.demo.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.domain.exception.CidadeNaoEncontradoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Cidade;
 import com.example.demo.domain.model.Estado;
@@ -12,8 +14,6 @@ import com.example.demo.domain.repository.EstadoRepository;
 @Service
 public class CadastroCidadeService {
 	
-	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Cidade %d não encontrada.";
-
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
@@ -24,7 +24,7 @@ public class CadastroCidadeService {
 		try {
 			cidadeRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id));
+			throw new CidadeNaoEncontradoException(id);
 		}
 	}
 	
@@ -37,7 +37,7 @@ public class CadastroCidadeService {
 	
 	public Cidade buscar(Long id) {
 		return cidadeRepository.findById(id).orElseThrow(
-				()-> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id)));
+				()-> new CidadeNaoEncontradoException(id));
 	}
 	
 }

@@ -5,6 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
+import com.example.demo.domain.exception.ProdutoNaoEncontradoException;
 import com.example.demo.domain.model.Produto;
 import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.ProdutoRepository;
@@ -12,8 +13,6 @@ import com.example.demo.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroProdutoService {
-	 
-	private static final String MSG_PRODUTO_NÃO_ENCONTRADO = "Produto %d não foi encontrado";
 	
 
 	@Autowired
@@ -33,13 +32,13 @@ public class CadastroProdutoService {
 		try {
 			produtoRespository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(MSG_PRODUTO_NÃO_ENCONTRADO, id));
+			throw new ProdutoNaoEncontradoException(id);
 		}
 	}
 	
 	public Produto buscar(Long id) {
 		return produtoRespository.findById(id).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(MSG_PRODUTO_NÃO_ENCONTRADO,id)));
+				() -> new ProdutoNaoEncontradoException(id));
 	}
 	
 	
