@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.domain.exception.CozinhaNaoEncontradoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.exception.NegocioException;
 import com.example.demo.domain.model.Cozinha;
@@ -68,7 +69,7 @@ public class RestauranteController {
 		BeanUtils.copyProperties(restaurante, restaurantebuscado, "id", "dataCadastro");
 		try {
 			return cadastroRestaurante.salvar(restaurantebuscado);
-		} catch (EntidadeNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
