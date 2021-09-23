@@ -17,20 +17,33 @@ import com.example.demo.domain.exception.NegocioException;
 //anotação diz que essa classe vai ser a que vai captar as exceções de todos os controllers para retornar EntityManager aqui.
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
-  
+
+	ProblemType problemTypeEntidadeNaoEncontrada = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+	ProblemType problemTypeEntidadeInternaNaoEncontrada = ProblemType.ENTIDADE_INTERNA_NAO_ENCONTRADA;
+	ProblemType problemTypeEntidadeEmUso = ProblemType.ENTIDADE_EM_USO;
+	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
-		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		Problem problem = createdProblem(HttpStatus.NOT_FOUND,
+				problemTypeEntidadeNaoEncontrada,
+				e.getMessage()).build();
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 	
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<?> handleNegocioException(NegocioException e,  WebRequest request ){
-		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		Problem problem =  createdProblem(HttpStatus.BAD_REQUEST,
+				problemTypeEntidadeInternaNaoEncontrada, 
+				e.getMessage()).build();
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
 	@ExceptionHandler(EntidadeEmUsoException.class)
 	public ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e,  WebRequest request){
-		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+		Problem problem =  createdProblem(HttpStatus.CONFLICT,
+				problemTypeEntidadeEmUso, 
+				e.getMessage()).build();
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	}
 	
 	@Override
@@ -38,20 +51,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			HttpStatus status, WebRequest request) {
 		
 		if (body == null) {
-			body = Problema.builder()
-					.dataHora(LocalDateTime.now())
-					//getReasonPhrase pega do status uma breve descrição.				
-					.Mensagem(status.getReasonPhrase())
+			body = Problem.builder()
+					.title(status.getReasonPhrase())
+					.status(status.value())
 					.build();
-		} else if(body instanceof String) {
-			body = Problema.builder()
-					.dataHora(LocalDateTime.now())
-					//fazendo um cash de objeto para String					
-					.Mensagem((String) body)
-					.build();
-		}
+		} 
 		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
+	}
+	
+	private Problem.ProblemBuilder createdProblem (HttpStatus status, ProblemType problemType, String details) {
+		return Problem.builder()
+				.status(status.value())
+				.type(problemType.getUri())
+				.title(problemType.getTitle())
+				.details(details);
 	}
 	
 }
