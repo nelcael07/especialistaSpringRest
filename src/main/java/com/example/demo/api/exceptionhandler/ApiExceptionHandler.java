@@ -1,7 +1,5 @@
 package com.example.demo.api.exceptionhandler;
 
-import java.time.LocalDateTime;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import com.example.demo.domain.exception.EntidadeEmUsoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.exception.NegocioException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
-//anotação diz que essa classe vai ser a que vai captar as exceções de todos os controllers para retornar EntityManager aqui.
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
@@ -23,6 +24,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	ProblemType problemTypeEntidadeInternaNaoEncontrada = ProblemType.ENTIDADE_INTERNA_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeEmUso = ProblemType.ENTIDADE_EM_USO;
 	ProblemType problemTypeMensagemInconpreensivel = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+	
 	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
@@ -52,12 +54,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
+		//pegando a causa root da exception atualmente		
+		Throwable rootCause = ExceptionUtils.getRootCause(e);
+		
+		if (rootCause instanceof InvalidFormatException) {
+			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+		}
+		
 		Problem problem = createdProblem(status,
 				problemTypeMensagemInconpreensivel,
 				"O corpo da requisição está invalido. Verifique ero de sintaxe.").build();
 		
 		return super.handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
-		
 	}
 	
 	@Override
@@ -81,6 +89,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.title(problemType.getTitle())
 				.details(details);
 	}
+	
+	//metodo para tratar uma exceção pega pela rootCause	
+	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException e ,
+			HttpHeaders headers, HttpStatus status, WebRequest request){
+		
+		String path = e.getPath().stream()
+				.map(ref -> ref.getFieldName())
+				.collect(Collectors.joining("."));
+		
+		String details = String.format("A propriedade '%s' recebeu o valor '%s',"
+				+ "que é de um tipo invalido. Corrija e informe um valor compativel com o tipo '%s'", 
+				path, e.getValue(), e.getTargetType().getSimpleName());
+		
+		Problem problem = createdProblem(
+				status,
+				problemTypeMensagemInconpreensivel,
+				details
+				).build();
+		
+		return handleExceptionInternal(e, problem, headers, status, request);
+	}
+	
+	
 	
 	
 }
