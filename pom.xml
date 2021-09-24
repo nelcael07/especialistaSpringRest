@@ -68,7 +68,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
-		
 	</dependencies>
 	<build>
 		<plugins>
@@ -85,6 +84,14 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>     
+        	<resource>
+            	<directory>src/main/resources</directory>
+            	<includes>                      
+                	<include>**/*.properties</include>                  
+            	</includes>
+        	</resource>            
+    	</resources>
 	</build>
 
 </project>

@@ -13,7 +13,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import com.example.demo.domain.exception.EntidadeEmUsoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.exception.NegocioException;
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
@@ -22,6 +24,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	ProblemType problemTypeEntidadeInternaNaoEncontrada = ProblemType.ENTIDADE_INTERNA_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeEmUso = ProblemType.ENTIDADE_EM_USO;
 	ProblemType problemTypeMensagemInconpreensivel = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+	ProblemType problemTypeEntidadeIgnorada = ProblemType.ENTIDADE_IGNORADA;
+	ProblemType problemTypeEntidadeNaoExiste = ProblemType.ENTIDADE_NAO_EXISTE;
+	
 	
 	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
@@ -63,7 +68,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 	
-	//subescrevendo metodo para tratar essa exception	
+	//subescrevendo metodo para tratar exceptions	
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -73,6 +78,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		if (rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+		}
+		
+		if(rootCause instanceof IgnoredPropertyException) {
+			return handleIgnoredPropertyException((IgnoredPropertyException) rootCause, headers, status, request);
+		}
+		
+		if (rootCause instanceof UnrecognizedPropertyException) {
+			return handleUnrecognizedPropertyException((UnrecognizedPropertyException) rootCause, headers, status, request);
 		}
 		
 		Problem problem = createdProblem(status,
@@ -102,6 +115,39 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
+	
+	//metodo para tratar IgnoredPropertyException	
+	private ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException e , HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		String path = e.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
+		
+		String details = String.format("A propriedade %s está sendo ignorada na representação", path);
+		
+		Problem problem = createdProblem(
+				status,
+				problemTypeEntidadeIgnorada,
+				details
+				).build();
+		
+		return handleExceptionInternal(e, problem, headers, status, request);
+	};
+	
+	private ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException e , HttpHeaders headers, HttpStatus status, WebRequest request) {
+		String path = e.getPath()
+				.stream()
+				.map(ref -> ref.getFieldName())
+				.collect(Collectors.joining("."));
+		String details = String.format("A propriedade %s não existe na representação.", path);
+		Problem problem = createdProblem(
+				status,
+				problemTypeEntidadeNaoExiste,
+				details
+				).build();
+		
+		return handleExceptionInternal(e, problem, headers, status, request);
+	}
+	
+	
 	
 	//metodo para criar uma instancia de Problem	
 	private Problem.ProblemBuilder createdProblem (HttpStatus status, ProblemType problemType, String details) {
