@@ -68,7 +68,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 	
-	//subescrevendo metodo para tratar exceptions	
+	//subescrevendo metodo para tratar varias exceções.
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -78,13 +78,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		if (rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
-		}
-		
-		if(rootCause instanceof IgnoredPropertyException) {
+		}else  if(rootCause instanceof IgnoredPropertyException) {
 			return handleIgnoredPropertyException((IgnoredPropertyException) rootCause, headers, status, request);
-		}
-		
-		if (rootCause instanceof UnrecognizedPropertyException) {
+		}  else if (rootCause instanceof UnrecognizedPropertyException) {
 			return handleUnrecognizedPropertyException((UnrecognizedPropertyException) rootCause, headers, status, request);
 		}
 		
@@ -132,7 +128,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(e, problem, headers, status, request);
 	};
 	
-	private ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException e , HttpHeaders headers, HttpStatus status, WebRequest request) {
+	private ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException e ,
+			HttpHeaders headers,
+			HttpStatus status,
+			WebRequest request){
 		String path = e.getPath()
 				.stream()
 				.map(ref -> ref.getFieldName())
@@ -146,7 +145,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
-	
 	
 	
 	//metodo para criar uma instancia de Problem	
