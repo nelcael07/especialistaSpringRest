@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import com.example.demo.domain.exception.EntidadeEmUsoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
@@ -50,23 +48,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	}
 	
-	@Override
-	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
-		//pegando a causa root da exception atualmente		
-		Throwable rootCause = ExceptionUtils.getRootCause(e);
-		
-		if (rootCause instanceof InvalidFormatException) {
-			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
-		}
-		
-		Problem problem = createdProblem(status,
-				problemTypeMensagemInconpreensivel,
-				"O corpo da requisição está invalido. Verifique ero de sintaxe.").build();
-		
-		return super.handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
-	}
 	
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
@@ -82,12 +63,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 	
-	private Problem.ProblemBuilder createdProblem (HttpStatus status, ProblemType problemType, String details) {
-		return Problem.builder()
-				.status(status.value())
-				.type(problemType.getUri())
-				.title(problemType.getTitle())
-				.details(details);
+	//subescrevendo metodo para tratar essa exception	
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		//pegando a causa root da exception atualmente		
+		Throwable rootCause = ExceptionUtils.getRootCause(e);
+		
+		if (rootCause instanceof InvalidFormatException) {
+			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+		}
+		
+		Problem problem = createdProblem(status,
+				problemTypeMensagemInconpreensivel,
+				"O corpo da requisição está invalido. Verifique erro de sintaxe.").build();
+		
+		return super.handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
 	}
 	
 	//metodo para tratar uma exceção pega pela rootCause	
@@ -111,7 +103,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
 	
-	
-	
+	//metodo para criar uma instancia de Problem	
+	private Problem.ProblemBuilder createdProblem (HttpStatus status, ProblemType problemType, String details) {
+		return Problem.builder()
+				.status(status.value())
+				.type(problemType.getUri())
+				.title(problemType.getTitle())
+				.details(details);
+	}
 	
 }
