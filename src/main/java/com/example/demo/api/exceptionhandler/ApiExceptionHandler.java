@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -21,6 +22,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	ProblemType problemTypeEntidadeNaoEncontrada = ProblemType.ENTIDADE_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeInternaNaoEncontrada = ProblemType.ENTIDADE_INTERNA_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeEmUso = ProblemType.ENTIDADE_EM_USO;
+	ProblemType problemTypeMensagemInconpreensivel = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
@@ -47,6 +49,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	}
 	
 	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		Problem problem = createdProblem(status,
+				problemTypeMensagemInconpreensivel,
+				"O corpo da requisição está invalido. Verifique ero de sintaxe.").build();
+		
+		return super.handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
+		
+	}
+	
+	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 		
@@ -67,5 +81,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.title(problemType.getTitle())
 				.details(details);
 	}
+	
 	
 }
