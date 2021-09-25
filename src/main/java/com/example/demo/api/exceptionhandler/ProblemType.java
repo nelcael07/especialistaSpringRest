@@ -9,7 +9,8 @@ public enum ProblemType {
 	ENTIDADE_INTERNA_NAO_ENCONTRADA("Entidade interna não encontrada" , "/entidade-interna-nao-encontrada"),
 	ENTIDADE_EM_USO("Entidade em uso","/entidade-em-uso"),
 	ENTIDADE_IGNORADA("Entidade está ignorada ", "/entidade-ignorada"),
-	ENTIDADE_NAO_EXISTE("Entidade não existe", "/entidade-nao-existe");
+	ENTIDADE_NAO_EXISTE("Entidade não existe", "/entidade-nao-existe"),
+	PARAMETRO_INVALIDO("Parametro invalido", "/parametro-invalido");
 	
 	private String title;
 	

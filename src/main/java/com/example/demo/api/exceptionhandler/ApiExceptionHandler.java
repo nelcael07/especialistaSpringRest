@@ -4,10 +4,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -27,9 +27,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	ProblemType problemTypeMensagemInconpreensivel = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 	ProblemType problemTypeEntidadeIgnorada = ProblemType.ENTIDADE_IGNORADA;
 	ProblemType problemTypeEntidadeNaoExiste = ProblemType.ENTIDADE_NAO_EXISTE;
-	
-	
-	
+	ProblemType problemTypeParamentroInvalido = ProblemType.PARAMETRO_INVALIDO;
+
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
 		Problem problem = createdProblem(HttpStatus.NOT_FOUND,
@@ -58,13 +57,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
-		
+		System.out.println("aquiiii guri");
 		if (body == null) {
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
 					.status(status.value())
 					.build();
 		} 
+		
+		if(ex instanceof MethodArgumentTypeMismatchException) {
+			System.out.println("aquiiii gurifasdfasdfasdfasnelacel");
+			Throwable rootCause = ExceptionUtils.getRootCause(ex);
+			return handleMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException) rootCause, headers, status, request);
+		}
 		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
@@ -73,7 +78,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
 		//pegando a causa root da exception atualmente		
 		Throwable rootCause = ExceptionUtils.getRootCause(e);
 		
@@ -104,6 +108,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				+ "que é de um tipo invalido. Corrija e informe um valor compativel com o tipo '%s'", 
 				path, e.getValue(), e.getTargetType().getSimpleName());
 		
+		
 		Problem problem = createdProblem(
 				status,
 				problemTypeMensagemInconpreensivel,
@@ -113,7 +118,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
 	
-	//metodo para tratar IgnoredPropertyException	
+	
 	private ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException e , HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		String path = e.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
@@ -146,6 +151,27 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
+	
+	
+	
+//	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException (MethodArgumentTypeMismatchException e ,
+			HttpHeaders headers,
+			HttpStatus status,
+			WebRequest request){
+		System.out.println("entrou aquiiiiii");
+		
+		System.out.println("aqui tbm 1");
+		String details = "nelcalefalkdsjfaksjdfkajsdkf";
+//				String.format("O parâmentro de url '%s' recebeu o valor '%s' que é do tipo invalido. Corrija e informe um valor compativel com o tipo %s"
+//				, request.getContextPath(), e.getValue(), e.getName());
+			
+		Problem problem = createdProblem(status, problemTypeParamentroInvalido , details).build();
+		System.out.println("aqui tbm");
+		return handleExceptionInternal(e, problem, headers, status, request);
+	}
+	
+	
 	
 	
 	//metodo para criar uma instancia de Problem	
