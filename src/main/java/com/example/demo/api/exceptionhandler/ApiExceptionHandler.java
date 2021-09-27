@@ -84,6 +84,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			HttpStatus status,
 			WebRequest request){
 		
+		
 		String details = 
 				String.format("O parâmentro de url '%s' recebeu o valor '%s' que é do tipo invalido. Corrija e informe um valor compativel com o tipo %s"
 				, e.getName(), e.getValue(), e.getRequiredType().getSimpleName());
