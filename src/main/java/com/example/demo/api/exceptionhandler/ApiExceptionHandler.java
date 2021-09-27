@@ -1,5 +1,6 @@
 package com.example.demo.api.exceptionhandler;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,11 +54,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	}
 	
-	
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
-		System.out.println("aquiiii guri");
 		if (body == null) {
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
@@ -65,20 +64,42 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 					.build();
 		} 
 		
-		if(ex instanceof MethodArgumentTypeMismatchException) {
-			System.out.println("aquiiii gurifasdfasdfasdfasnelacel");
-			Throwable rootCause = ExceptionUtils.getRootCause(ex);
-			return handleMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException) rootCause, headers, status, request);
-		}
-		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 	
-	//subescrevendo metodo para tratar varias exceções.
+	@Override
+	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		
+		if(ex instanceof MethodArgumentTypeMismatchException) {
+			return handleMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException)ex, headers, status, request);
+		}
+		
+		return super.handleTypeMismatch(ex, headers, status, request);
+	}
+	
+	
+	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException (MethodArgumentTypeMismatchException e ,
+			HttpHeaders headers,
+			HttpStatus status,
+			WebRequest request){
+		
+		String details = 
+				String.format("O parâmentro de url '%s' recebeu o valor '%s' que é do tipo invalido. Corrija e informe um valor compativel com o tipo %s"
+				, e.getName(), e.getValue(), e.getRequiredType().getSimpleName());
+			
+		Problem problem = createdProblem(status, 
+				problemTypeParamentroInvalido ,
+				details
+				).build();
+		
+		return handleExceptionInternal(e, problem, headers, status, request);
+	}
+	
+	
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		//pegando a causa root da exception atualmente		
 		Throwable rootCause = ExceptionUtils.getRootCause(e);
 		
 		if (rootCause instanceof InvalidFormatException) {
@@ -99,7 +120,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	//metodo para tratar uma exceção pega pela rootCause	
 	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException e ,
 			HttpHeaders headers, HttpStatus status, WebRequest request){
-		
 		String path = e.getPath().stream()
 				.map(ref -> ref.getFieldName())
 				.collect(Collectors.joining("."));
@@ -151,28 +171,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
-	
-	
-	
-//	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException (MethodArgumentTypeMismatchException e ,
-			HttpHeaders headers,
-			HttpStatus status,
-			WebRequest request){
-		System.out.println("entrou aquiiiiii");
-		
-		System.out.println("aqui tbm 1");
-		String details = "nelcalefalkdsjfaksjdfkajsdkf";
-//				String.format("O parâmentro de url '%s' recebeu o valor '%s' que é do tipo invalido. Corrija e informe um valor compativel com o tipo %s"
-//				, request.getContextPath(), e.getValue(), e.getName());
-			
-		Problem problem = createdProblem(status, problemTypeParamentroInvalido , details).build();
-		System.out.println("aqui tbm");
-		return handleExceptionInternal(e, problem, headers, status, request);
-	}
-	
-	
-	
 	
 	//metodo para criar uma instancia de Problem	
 	private Problem.ProblemBuilder createdProblem (HttpStatus status, ProblemType problemType, String details) {
