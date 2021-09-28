@@ -13,11 +13,10 @@ import lombok.Getter;
 public class Problem {
 	
 	private Integer status;
-	
 	private String type;
-	
 	private String title;
-	
 	private String details;
+	
+	private String userMessage;
 	
 }

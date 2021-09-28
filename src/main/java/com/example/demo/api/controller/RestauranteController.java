@@ -45,9 +45,6 @@ public class RestauranteController {
 	
 	@GetMapping("/{id}")
 	public Restaurante buscar(@PathVariable Long id) {
-		if (true) {
-			throw new IllegalArgumentException("teste");
-		}
 		return cadastroRestaurante.buscar(id);
 	}
 	

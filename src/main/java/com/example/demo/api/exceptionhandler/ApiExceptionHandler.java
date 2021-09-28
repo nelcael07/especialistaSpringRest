@@ -23,6 +23,9 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
+	private static final String SISTEMA_ERROR = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o"
+			+ "problema persistir, entre em contato com o administrador do sistema";
+	
 	ProblemType problemTypeRecursoNaoEncontrada = ProblemType.RECURSO_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeInternaNaoEncontrada = ProblemType.ENTIDADE_INTERNA_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeEmUso = ProblemType.ENTIDADE_EM_USO;
@@ -32,32 +35,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	ProblemType problemTypeParamentroInvalido = ProblemType.PARAMETRO_INVALIDO;
 	ProblemType problemTypeErroInterno = ProblemType.ERRO_NO_SISTEMA;
 
-	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
-		Problem problem = createdProblem(HttpStatus.NOT_FOUND,
-				problemTypeRecursoNaoEncontrada,
-				e.getMessage()).build();
-		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
-	}
 	
-	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> handleNegocioException(NegocioException e,  WebRequest request ){
-		Problem problem =  createdProblem(HttpStatus.BAD_REQUEST,
-				problemTypeEntidadeInternaNaoEncontrada, 
-				e.getMessage()).build();
-		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-	}
-	
-	@ExceptionHandler(EntidadeEmUsoException.class)
-	public ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e,  WebRequest request){
-		Problem problem =  createdProblem(HttpStatus.CONFLICT,
-				problemTypeEntidadeEmUso, 
-				e.getMessage()).build();
-		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
-	}
-	
-	
-	
+	//trata a handleExceptionInternal	
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
@@ -65,11 +44,44 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
 					.status(status.value())
+					.userMessage(ex.getMessage())
 					.build();
 		} 
 		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
+	
+	
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
+		Problem problem = createdProblem(HttpStatus.NOT_FOUND,
+				problemTypeRecursoNaoEncontrada,
+				e.getMessage())
+				.userMessage(e.getMessage())
+				.build();
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	public ResponseEntity<?> handleNegocioException(NegocioException e,  WebRequest request ){
+		Problem problem =  createdProblem(HttpStatus.BAD_REQUEST,
+				problemTypeEntidadeInternaNaoEncontrada, 
+				e.getMessage())
+				.userMessage(e.getMessage())
+				.build();
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler(EntidadeEmUsoException.class)
+	public ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e,  WebRequest request){
+		Problem problem =  createdProblem(HttpStatus.CONFLICT,
+				problemTypeEntidadeEmUso, 
+				e.getMessage())
+				.userMessage(e.getMessage())
+				.build();
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
+	}
+	
 	
 	@Override
 	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
@@ -87,15 +99,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			HttpStatus status,
 			WebRequest request){
 		
-		
 		String details = 
-				String.format("O parâmentro de url '%s' recebeu o valor '%s' que é do tipo invalido. Corrija e informe um valor compativel com o tipo %s"
+				String.format("O parâmentro de url '%s' recebeu o valor '%s' que é do tipo invalido."
+						+ " Corrija e informe um valor compativel com o tipo %s"
 				, e.getName(), e.getValue(), e.getRequiredType().getSimpleName());
 			
 		Problem problem = createdProblem(status, 
 				problemTypeParamentroInvalido ,
 				details
-				).build();
+				)
+				.userMessage(SISTEMA_ERROR)
+				.build();
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
@@ -132,7 +146,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problem = createdProblem(status,
 				problemTypeMensagemInconpreensivel,
-				"O corpo da requisição está invalido. Verifique erro de sintaxe.").build();
+				"O corpo da requisição está invalido. Verifique erro de sintaxe.")
+				.userMessage(SISTEMA_ERROR)
+				.build();
 		
 		return super.handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
 	}
@@ -152,7 +168,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				status,
 				problemTypeMensagemInconpreensivel,
 				details
-				).build();
+				)
+				//não se coloca essa propriedade no createdProblem pq nem todos as capturas terão que ter esse elemento.				
+				.userMessage(SISTEMA_ERROR)
+				.build();
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
@@ -195,8 +214,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	//vai pegar todas exceções não tratadas	nas demais funções
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleAll(Exception e , WebRequest resquest){
-		String details = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o"
-				+ "problema persistir, entre em contato com o administrador do sistema";
+		String details = SISTEMA_ERROR;
 		
 		Problem problem = createdProblem(
 				HttpStatus.INTERNAL_SERVER_ERROR,
@@ -216,7 +234,5 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.title(problemType.getTitle())
 				.details(details);
 	}
-	
-	
 	
 }
