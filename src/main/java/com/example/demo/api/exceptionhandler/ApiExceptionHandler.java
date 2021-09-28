@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
-	ProblemType problemTypeEntidadeNaoEncontrada = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+	ProblemType problemTypeRecursoNaoEncontrada = ProblemType.RECURSO_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeInternaNaoEncontrada = ProblemType.ENTIDADE_INTERNA_NAO_ENCONTRADA;
 	ProblemType problemTypeEntidadeEmUso = ProblemType.ENTIDADE_EM_USO;
 	ProblemType problemTypeMensagemInconpreensivel = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -34,7 +34,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
 		Problem problem = createdProblem(HttpStatus.NOT_FOUND,
-				problemTypeEntidadeNaoEncontrada,
+				problemTypeRecursoNaoEncontrada,
 				e.getMessage()).build();
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
@@ -79,7 +79,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return super.handleTypeMismatch(ex, headers, status, request);
 	}
 	
-	
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException (MethodArgumentTypeMismatchException e ,
 			HttpHeaders headers,
 			HttpStatus status,
@@ -97,6 +96,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
+	
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		
+		String details = String.format("O recurso %s, que vovê tentou acessar, é inexistente",
+				ex.getRequestURL());
+		
+		Problem problem = createdProblem(
+				status,
+				problemTypeRecursoNaoEncontrada,
+				details
+				).build();
+		
+		return handleExceptionInternal(ex, problem, headers, status, request);
+	}
+	
 	
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
