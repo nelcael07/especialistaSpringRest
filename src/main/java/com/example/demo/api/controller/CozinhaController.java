@@ -1,6 +1,9 @@
 package com.example.demo.api.controller;
 
 import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.repository.CozinhaRespository;
 import com.example.demo.domain.service.CadastroCozinhaService;
@@ -29,7 +33,7 @@ public class CozinhaController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody Cozinha cozinha){
+	public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha){
 		return cadastroCozinha.salvar(cozinha);
 	}
  	

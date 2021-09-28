@@ -50,7 +50,6 @@ public class Restaurante {
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
 
-	//to dizendo para essa validação ser feita em cascata, ou seja, quando validar restaurante ele valida cozinha.	
 	@Valid
 	@NotNull
 	@JsonIgnoreProperties("hibernateLazyInitializer")
