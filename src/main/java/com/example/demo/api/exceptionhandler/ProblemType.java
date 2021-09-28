@@ -11,7 +11,8 @@ public enum ProblemType {
 	ENTIDADE_IGNORADA("Entidade está ignorada ", "/entidade-ignorada"),
 	ENTIDADE_NAO_EXISTE("Entidade não existe", "/entidade-nao-existe"),
 	PARAMETRO_INVALIDO("Parametro invalido", "/parametro-invalido"),
-	ERRO_NO_SISTEMA("Erro no sistema", "/erro-no-sistema");
+	ERRO_NO_SISTEMA("Erro no sistema", "/erro-no-sistema"),
+	PARAMENTRO_VIOLADO("Paramentro violado", "/parametro-violado");
 	
 	private String title;
 	
