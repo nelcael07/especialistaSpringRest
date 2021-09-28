@@ -30,6 +30,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	ProblemType problemTypeEntidadeIgnorada = ProblemType.ENTIDADE_IGNORADA;
 	ProblemType problemTypeEntidadeNaoExiste = ProblemType.ENTIDADE_NAO_EXISTE;
 	ProblemType problemTypeParamentroInvalido = ProblemType.PARAMETRO_INVALIDO;
+	ProblemType problemTypeErroInterno = ProblemType.ERRO_NO_SISTEMA;
 
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEstadoNaoEncontradoException(EntidadeNaoEncontradaException e, WebRequest request){
@@ -54,6 +55,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				e.getMessage()).build();
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	}
+	
+	
 	
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
@@ -188,6 +191,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(e, problem, headers, status, request);
 	}
 	
+	
+	//vai pegar todas exceções não tratadas	nas demais funções
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleAll(Exception e , WebRequest resquest){
+		String details = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o"
+				+ "problema persistir, entre em contato com o administrador do sistema";
+		
+		Problem problem = createdProblem(
+				HttpStatus.INTERNAL_SERVER_ERROR,
+				problemTypeErroInterno,
+				details)
+				.build();
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, resquest);
+	}
+	
+	
+	
 	//metodo para criar uma instancia de Problem	
 	private Problem.ProblemBuilder createdProblem (HttpStatus status, ProblemType problemType, String details) {
 		return Problem.builder()
@@ -196,5 +216,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.title(problemType.getTitle())
 				.details(details);
 	}
+	
+	
 	
 }
