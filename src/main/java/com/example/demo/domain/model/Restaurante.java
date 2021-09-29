@@ -25,6 +25,7 @@ import javax.validation.constraints.PositiveOrZero;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.example.demo.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -41,17 +42,18 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull  
+	@NotNull(groups = Groups.CadastroRestaurante.class)  
 	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 	
+	@NotNull(groups = Groups.CadastroRestaurante.class)
 	@PositiveOrZero
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
 
 	@Valid
-	@NotNull
+	@NotNull(groups = Groups.CadastroRestaurante.class)
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn( nullable = false )
