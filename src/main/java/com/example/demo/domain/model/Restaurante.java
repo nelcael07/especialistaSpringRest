@@ -55,7 +55,6 @@ public class Restaurante {
 	private BigDecimal taxaFrete;
 
 	@Valid
-	//quando for validar o objeto de cozinha, ele vai transformar o default em cadastroRestaurantes.	
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@NotNull 
 	@JsonIgnoreProperties("hibernateLazyInitializer")

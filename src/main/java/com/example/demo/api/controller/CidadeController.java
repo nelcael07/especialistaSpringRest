@@ -2,11 +2,12 @@ package com.example.demo.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +45,7 @@ public class CidadeController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade criar(@RequestBody Cidade cidade) {
+	public Cidade criar(@RequestBody @Valid Cidade cidade) {
 		try {
 			return cidadeService.salvar(cidade);
 		} catch (EstadoNaoEncontradoException e) {
@@ -53,7 +54,7 @@ public class CidadeController {
 	}
 	
 	@PutMapping("/{id}")
-	public Cidade atualizar(@PathVariable Long id, @RequestBody Cidade cidade){
+	public Cidade atualizar(@PathVariable Long id, @RequestBody @Valid Cidade cidade){
 		Cidade cidadebuscada = cidadeService.buscar(id);
 		BeanUtils.copyProperties(cidade, cidadebuscada, "id");
 		try{
