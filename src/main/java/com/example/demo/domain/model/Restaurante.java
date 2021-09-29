@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -42,18 +44,20 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull(groups = Groups.CadastroRestaurante.class)  
+	@NotNull  
 	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 	
-	@NotNull(groups = Groups.CadastroRestaurante.class)
+	@NotNull
 	@PositiveOrZero
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
 
 	@Valid
-	@NotNull(groups = Groups.CadastroRestaurante.class)
+	//quando for validar o objeto de cozinha, ele vai transformar o default em cadastroRestaurantes.	
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+	@NotNull 
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn( nullable = false )
