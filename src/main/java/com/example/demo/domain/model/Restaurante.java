@@ -27,7 +27,8 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.example.demo.Groups;
+import com.example.demo.core.validation.Groups;
+import com.example.demo.core.validation.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -49,7 +50,7 @@ public class Restaurante {
 	private String nome;
 	
 	@NotNull
-	@PositiveOrZero
+	@TaxaFrete
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
 
@@ -78,8 +79,8 @@ public class Restaurante {
 	@JsonIgnore
 	@ManyToMany
  	@JoinTable(name = "restaurante_forma_pagamento", 
-			 joinColumns = @JoinColumn(name = "restaurante_id"),
-			 inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id")
+ 		joinColumns = @JoinColumn(name = "restaurante_id"),
+ 		inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id")
 	) 
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 	
