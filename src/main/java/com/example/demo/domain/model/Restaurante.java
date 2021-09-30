@@ -28,7 +28,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.demo.core.validation.Groups;
-import com.example.demo.core.validation.TaxaFrete;
+import com.example.demo.core.validation.Multiplo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -50,7 +50,8 @@ public class Restaurante {
 	private String nome;
 	
 	@NotNull
-	@TaxaFrete
+	@Multiplo(numero = 5)
+	@PositiveOrZero
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
 
