@@ -75,7 +75,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		String details = "Um ou mais campos estão invalidos. Faça o preenchimento correto e tente novamente.";
 		
-		//bindingresult contem as contraints violadas		
 		BindingResult binding = ex.getBindingResult();
 		
 		List<Problem.Objects> problemObjects = binding.getAllErrors().stream()
@@ -93,9 +92,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 					.build();
 				})
 				.collect(Collectors.toList() );
-		
-		
-		
 		
 		Problem problem = createdProblem(
 				status,
