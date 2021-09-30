@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.annotation.HandlesTypes;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +25,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.example.demo.core.validation.ValidacaoException;
 import com.example.demo.domain.exception.EntidadeEmUsoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.exception.NegocioException;
@@ -64,6 +68,34 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Autowired
 	private MessageSource messageSource;
 	
+	
+	@ExceptionHandler(ValidacaoException.class)
+	public ResponseEntity<?> handleValidacaoException (ValidacaoException e, WebRequest request){
+		String details = "Um ou mais campos do metodo path estão invalidos. Faça o preenchimento correto e tente novamente.";
+		BindingResult binding = e.getBindingResult();
+		
+		List<Problem.Objects> problemObjects = binding.getAllErrors().stream()
+				.map(objectError -> {
+					String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+					String name = ((FieldError) objectError).getField();
+					return Problem.Objects.builder()
+							.name(name)
+							.userMessage(message)
+							.build();
+				})
+				.collect(Collectors.toList());
+		
+		Problem problem = createdProblem(HttpStatus.BAD_REQUEST, problemTypeParametroViolado, details)
+				.timestamp(LocalDateTime.now())
+				.objects(problemObjects)
+				.details(details)
+				.userMessage(details)
+				.build();
+		
+		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	
 	@Override	
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -73,16 +105,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		//bindingresult contem as contraints violadas		
 		BindingResult binding = ex.getBindingResult();
 		
-		List<Problem.Field> fields = binding.getFieldErrors().stream()
-				.map(fieldError -> {
-					//pegando a mensagem do message.properties					
-					String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-					return Problem.Field.builder()
-					.name(fieldError.getField()) 
+		List<Problem.Objects> problemObjects = binding.getAllErrors().stream()
+				.map(objectError -> {
+					String message = messageSource.getMessage(objectError , LocaleContextHolder.getLocale());
+					String name = null;
+					if (objectError instanceof FieldError) {
+						name = ((FieldError) objectError).getField();
+					}else {
+						name = objectError.getObjectName();
+					}
+					return Problem.Objects.builder()
+					.name(name) 
 					.userMessage(message)
 					.build();
 				})
 				.collect(Collectors.toList() );
+		
+		
 		
 		
 		Problem problem = createdProblem(
@@ -90,7 +129,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				problemTypeParametroViolado,
 				details)
 				.timestamp(LocalDateTime.now())
-				.fields(fields)
+				.objects(problemObjects)
 				.userMessage(details)
 				.build(); 
 				
