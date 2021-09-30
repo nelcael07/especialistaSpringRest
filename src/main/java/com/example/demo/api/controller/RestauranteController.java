@@ -85,48 +85,7 @@ public class RestauranteController {
 			throw new NegocioException(e.getMessage());
 		}
 	}
-
-	@PatchMapping("/{id}")
-	 public Restaurante atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos, HttpServletRequest request ){
-		Restaurante restaurantebuscado = cadastroRestaurante.buscar(id);
-		 
-		merge(campos, restaurantebuscado, request);
-		validate(restaurantebuscado, "restaurante");
-		return cadastroRestaurante.salvar(restaurantebuscado);
-	}	 
 	
-	
-	private void validate(Restaurante restaurante, String objectName) {
-		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante, objectName);
-		
-		validator.validate(restaurante, bindingResult);
-		
-		if (bindingResult.hasErrors()) {
-			throw new ValidacaoException(bindingResult); 
-			
-		}
-	}
-	
-	 
-	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
-		ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
-
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);  
-			objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-			
-			Restaurante restauranteOrigem = objectMapper.convertValue(camposOrigem, Restaurante.class);
-			camposOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-				Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-				field.setAccessible(true);
-				Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-				ReflectionUtils.setField(field, restauranteDestino, novoValor);
-			});
-		} catch (IllegalArgumentException e) {
-			Throwable rootCause = ExceptionUtils.getRootCause(e);
-			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest );
-		}
-		  
-	}
 }
+
+	

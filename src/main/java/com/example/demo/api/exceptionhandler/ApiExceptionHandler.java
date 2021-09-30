@@ -69,33 +69,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	private MessageSource messageSource;
 	
 	
-	@ExceptionHandler(ValidacaoException.class)
-	public ResponseEntity<?> handleValidacaoException (ValidacaoException e, WebRequest request){
-		String details = "Um ou mais campos do metodo path estão invalidos. Faça o preenchimento correto e tente novamente.";
-		BindingResult binding = e.getBindingResult();
-		
-		List<Problem.Objects> problemObjects = binding.getAllErrors().stream()
-				.map(objectError -> {
-					String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
-					String name = ((FieldError) objectError).getField();
-					return Problem.Objects.builder()
-							.name(name)
-							.userMessage(message)
-							.build();
-				})
-				.collect(Collectors.toList());
-		
-		Problem problem = createdProblem(HttpStatus.BAD_REQUEST, problemTypeParametroViolado, details)
-				.timestamp(LocalDateTime.now())
-				.objects(problemObjects)
-				.details(details)
-				.userMessage(details)
-				.build();
-		
-		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-	}
-	
-	
 	@Override	
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
