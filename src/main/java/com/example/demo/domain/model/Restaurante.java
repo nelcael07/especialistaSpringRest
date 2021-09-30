@@ -28,13 +28,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.demo.core.validation.Groups;
-import com.example.demo.core.validation.Multiplo;
+import com.example.demo.core.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@ValorZeroIncluiDescricao(valorField = "taxaFrete", descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -50,7 +51,6 @@ public class Restaurante {
 	private String nome;
 	
 	@NotNull
-	@Multiplo(numero = 5)
 	@PositiveOrZero
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
