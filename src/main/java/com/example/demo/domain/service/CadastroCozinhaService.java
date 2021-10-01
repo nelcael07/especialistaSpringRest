@@ -37,7 +37,7 @@ public class CadastroCozinhaService {
 			throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO , id));
 		}
 	}
-	
+ 	
 	public Cozinha buscar(Long id) {
 		return cozinhaRepository.findById(id)
 				.orElseThrow(()-> new CozinhaNaoEncontradoException(id));

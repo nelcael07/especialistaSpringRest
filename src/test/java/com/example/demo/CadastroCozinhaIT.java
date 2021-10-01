@@ -18,7 +18,7 @@ import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.service.CadastroCozinhaService;
 
 @SpringBootTest
-class CadastroCozinhaIntegrationTests {
+class CadastroCozinhaIT {
 	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
@@ -31,7 +31,7 @@ class CadastroCozinhaIntegrationTests {
 		
 		//ação
 		cozinha = cadastroCozinha.salvar(cozinha);
-		
+			
 		//validações
 		assertThat(cozinha).isNotNull();
 		assertThat(cozinha.getId()).isNotNull();
