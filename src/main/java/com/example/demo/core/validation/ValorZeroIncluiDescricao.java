@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-//vai ser para ser utilizada em class, inteface, enuns
 @Target({ ElementType.TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = { ValorZeroIncluiDescricaoValidator.class })
@@ -18,7 +17,6 @@ public @interface ValorZeroIncluiDescricao {
 	String message() default "Não contém a descricao 'Frete Grátis'.";
 	
 	Class<?>[] groups() default { };
-	
 	
 	Class<? extends Payload>[] payload() default { };
 	
