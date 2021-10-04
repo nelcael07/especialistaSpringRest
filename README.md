@@ -11,5 +11,9 @@ Conteúdos:
   - Validações com Bean Validation
   - Testes de integração
   - Boas práticas e técnicas para APIs
+
+commits seguindo o padrão: <b>Conventional Commits 1.0.0-beta.4</b><br>
+disponivel em: https://www.conventionalcommits.org/pt-br/v1.0.0-beta.4/ <br>
+data de acesso: 4/10/2021
   
   
