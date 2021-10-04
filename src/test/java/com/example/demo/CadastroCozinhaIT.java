@@ -38,6 +38,23 @@ class CadastroCozinhaIT {
 		prepararDados();
 	}
 	
+	private void prepararDados() {
+		
+		Cozinha cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1); 
+		
+		Cozinha cozinha2 = new Cozinha(); 
+		cozinha2.setNome("Brasileira");
+		cozinhaRepository.save(cozinha2);
+		
+		Cozinha cozinha3 = new Cozinha(); 
+		cozinha3.setNome("Argentina");
+		cozinhaRepository.save(cozinha3);
+		
+	}
+	
+	
 	@Test
 	public void testarDeveRetornarStatus200_QuandoConsultarCozinha() {
 		RestAssured.given()
@@ -56,7 +73,7 @@ class CadastroCozinhaIT {
 //		.when()
 //			.get()
 //		.then()
-//			.body("nome", Matchers.hasSize(11))
+//			.body("nome", Matchers.hasSize(3))
 //			.body("nome", Matchers.hasItems("Italiana", "Brasileira"));
 //	}
 	
@@ -73,21 +90,30 @@ class CadastroCozinhaIT {
 		
 	}
 	
-	private void prepararDados() {
-		
-		Cozinha cozinha1 = new Cozinha();
-		cozinha1.setNome("Tailandesa");
-		cozinhaRepository.save(cozinha1); 
-		
-		Cozinha cozinha2 = new Cozinha(); 
-		cozinha2.setNome("Brasileira");
-		cozinhaRepository.save(cozinha2);
-		
-		Cozinha cozinha3 = new Cozinha(); 
-		cozinha3.setNome("Argentina");
-		cozinhaRepository.save(cozinha3);
+	@Test
+	public void testarBuscaUnitaria() {
+		RestAssured.given()
+			.pathParam("cozinhaId", 1)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.OK.value());
 		
 	}
+	
+	@Test
+	public void testarErroBuscaUnitaria() {
+		RestAssured.given()
+			.pathParam("cozinhaId", 100)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
+		
+	}
+		
 	
 	
 }
