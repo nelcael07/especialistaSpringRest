@@ -2,27 +2,40 @@ package com.example.demo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
+import com.example.demo.domain.model.Cozinha;
+import com.example.demo.domain.repository.CozinhaRespository;
+import com.example.demo.util.DatabaseCleaner;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//mandando ele usar o application.properties especificado quando for rodar os testes.
-//@TestPropertySource("/application-test.properties")
+@TestPropertySource("/application-test.properties")
 class CadastroCozinhaIT {
 	
 	@LocalServerPort
 	private int port;
+	
+	@Autowired
+	private DatabaseCleaner dataBase;
+	
+	@Autowired
+	private CozinhaRespository cozinhaRepository;
 
 	@BeforeEach
 	public void setUp() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
+		//chamando class que vai limpar as tabelas do banco de dados.		
+		dataBase.clearTables();
+		prepararDados();
 	}
 	
 	@Test
@@ -51,15 +64,31 @@ class CadastroCozinhaIT {
 	public void testarDeveRetornarStatus201_QuandoCadastrarCozinha() {
 		RestAssured.given()
 			.body("{ \"nome\" : \"Chinesa\" }")
-			//está sendo mandado um json.			
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
 		.when()
 			.post()
-		.then()
+		.then() 
 			.statusCode(HttpStatus.CREATED.value());
+		
+	}
+	
+	private void prepararDados() {
+		
+		Cozinha cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1); 
+		
+		Cozinha cozinha2 = new Cozinha(); 
+		cozinha2.setNome("Brasileira");
+		cozinhaRepository.save(cozinha2);
+		
+		Cozinha cozinha3 = new Cozinha(); 
+		cozinha3.setNome("Argentina");
+		cozinhaRepository.save(cozinha3);
 		
 	}
 	
 	
 }
+	
