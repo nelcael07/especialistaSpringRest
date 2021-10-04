@@ -1,5 +1,8 @@
 package com.example.demo.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -7,11 +10,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StreamUtils;
 
 @Component
 public class DatabaseCleaner {
@@ -96,5 +103,7 @@ public class DatabaseCleaner {
 		logger.debug("Adding SQL: {}", sql);
 		return sql;
 	}
+	
+	
 	
 }
