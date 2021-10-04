@@ -1,6 +1,7 @@
-<h3>Curso Profissional Especialista spring rest produzido pela algaWorks.</h3>
+<h2>Curso Profissional Especialista spring rest produzido pela algaWorks.</h2>
 
-Conteúdos: 
+<h3>Conteúdos:</h3> 
+
   - Spring e Injeção de Dependências
   - Introdução ao JPA e Hibernate
   - REST com Spring
@@ -12,8 +13,8 @@ Conteúdos:
   - Testes de integração
   - Boas práticas e técnicas para APIs
 
-commits seguindo o padrão: <b>Conventional Commits 1.0.0-beta.4</b><br>
-disponivel em: https://www.conventionalcommits.org/pt-br/v1.0.0-beta.4/ <br>
-data de acesso: 4/10/2021
+<b>Convenção de commits utilizada no projeto:</b> Conventional Commits 1.0.0-beta.4<br>
+<b>Disponivel em:</b> https://www.conventionalcommits.org/pt-br/v1.0.0-beta.4/ <br>
+<b>Data de acesso:</b> 4/10/2021
   
   
