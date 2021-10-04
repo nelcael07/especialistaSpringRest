@@ -55,7 +55,7 @@ public class CozinhaController {
 		return cadastroCozinha.buscar(id);
 	}
 	  
-	@GetMapping 
+	@GetMapping
 	public List<Cozinha> listar(){ 
 		return cozinhaRespository.findAll();
 	}
