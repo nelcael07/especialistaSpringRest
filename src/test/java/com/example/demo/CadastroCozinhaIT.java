@@ -1,31 +1,28 @@
 package com.example.demo;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//mandando ele usar o application.properties especificado quando for rodar os testes.
+//@TestPropertySource("/application-test.properties")
 class CadastroCozinhaIT {
 	
 	@LocalServerPort
 	private int port;
-	
-//	private FlywayAutoConfiguration flyway;
-	
+
 	@BeforeEach
 	public void setUp() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
-		
-		//antes de todos os metodos, vai ser executado o afterMigrate para que o banco fique em um estado padrão para os testes.		
-		//flyway.migrate();
 	}
 	
 	@Test
@@ -63,11 +60,6 @@ class CadastroCozinhaIT {
 			.statusCode(HttpStatus.CREATED.value());
 		
 	}
-	
-	
-	
-	
-	
 	
 	
 }
