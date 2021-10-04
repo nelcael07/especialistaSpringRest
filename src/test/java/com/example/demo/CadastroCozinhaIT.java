@@ -112,6 +112,11 @@ class CadastroCozinhaIT {
 		.then()
 			.statusCode(HttpStatus.NOT_FOUND.value());
 		
+		
+		
+		
+		
+		
 	}
 		
 	
