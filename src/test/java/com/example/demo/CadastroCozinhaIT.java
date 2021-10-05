@@ -126,6 +126,6 @@ class CadastroCozinhaIT {
 			.statusCode(HttpStatus.NOT_FOUND.value());
 
 	}
-		
+	
 }
 	
