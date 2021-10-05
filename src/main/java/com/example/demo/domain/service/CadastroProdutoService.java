@@ -3,6 +3,7 @@ package com.example.demo.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.exception.ProdutoNaoEncontradoException;
@@ -21,6 +22,7 @@ public class CadastroProdutoService {
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
 	
+	@Transactional
 	public Produto salvar(Produto produto) {
 		Long id  = produto.getRestaurante().getId();
 		Restaurante restaurante = cadastroRestaurante.buscar(id);
@@ -28,6 +30,7 @@ public class CadastroProdutoService {
 		return produtoRespository.save(produto);
 	}
 	
+	@Transactional
 	public void remover(Long id) {
 		try {
 			produtoRespository.deleteById(id);
