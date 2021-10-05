@@ -39,7 +39,6 @@ public class Usuario {
 	@JoinColumn(nullable = false)
 	private String senha;
 	
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataCadastro;
@@ -51,9 +50,5 @@ public class Usuario {
 			inverseJoinColumns = @JoinColumn(name = "grupo_id")
 	)
 	private List<Grupo> grupo = new ArrayList<>();
-	
-	
-	
-
 	
 }

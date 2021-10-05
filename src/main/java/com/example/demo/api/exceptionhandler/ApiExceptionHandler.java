@@ -244,7 +244,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		String path = e.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 		
-		String details = String.format("A propriedade %s está sendo ignorada na representação", path);
+		String details = String.format("A propriedade %s não existe na representação.", path);
 		
 		Problem problem = createdProblem(
 				status,
