@@ -54,11 +54,14 @@ public class Restaurante {
 	@PositiveOrZero
 	@Column(name="taxa_frete",nullable = false)
 	private BigDecimal taxaFrete;
-
+	
+	//quando estiver adicionando ou atualizando uma cozinha ele vai ignorar a propriedade nome.
+	//allow getter permite metodos getter, ou seja, ele vai mostrar na busca de restaurantes.
+	//ou seja, vai ser ignorado na deserealização(json para objeto) e não na serialização(objeto para json).	
+	@JsonIgnoreProperties(value = "nome", allowGetters = true)
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@NotNull 
-	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn( nullable = false )
 	private Cozinha cozinha;
