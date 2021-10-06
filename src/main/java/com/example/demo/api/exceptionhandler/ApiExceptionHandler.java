@@ -1,10 +1,9 @@
 package com.example.demo.api.exceptionhandler;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.servlet.annotation.HandlesTypes;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
@@ -25,7 +24,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.example.demo.core.validation.ValidacaoException;
 import com.example.demo.domain.exception.EntidadeEmUsoException;
 import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.exception.NegocioException;
@@ -58,7 +56,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
 					.status(status.value())
-					.timestamp(LocalDateTime.now())
+					.timestamp(OffsetDateTime.now())
 					.build();
 		} 
 		
@@ -97,7 +95,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				status,
 				problemTypeParametroViolado,
 				details)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.objects(problemObjects)
 				.userMessage(details)
 				.build(); 
@@ -112,7 +110,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				problemTypeRecursoNaoEncontrada,
 				e.getMessage())
 				.userMessage(e.getMessage())
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
@@ -123,7 +121,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				problemTypeEntidadeInternaNaoEncontrada, 
 				e.getMessage())
 				.userMessage(e.getMessage())
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
@@ -134,7 +132,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				problemTypeEntidadeEmUso, 
 				e.getMessage())
 				.userMessage(e.getMessage())
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	}
@@ -166,7 +164,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				details
 				)
 				.userMessage(SISTEMA_ERROR)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
@@ -185,7 +183,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				details
 				)
 				.userMessage(SISTEMA_ERROR)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
@@ -209,7 +207,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				problemTypeMensagemInconpreensivel,
 				"O corpo da requisição está invalido. Verifique erro de sintaxe.")
 				.userMessage(SISTEMA_ERROR)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return super.handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
@@ -233,7 +231,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				)
 				//não se coloca essa propriedade no createdProblem pq nem todos as capturas terão que ter esse elemento.				
 				.userMessage(SISTEMA_ERROR)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
@@ -252,7 +250,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				details
 				)
 				.userMessage(SISTEMA_ERROR)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
@@ -273,7 +271,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				details
 				)
 				.userMessage(SISTEMA_ERROR)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(e, problem, headers, status, request);
@@ -290,7 +288,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				problemTypeErroInterno,
 				details)
 				.userMessage(SISTEMA_ERROR)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		return handleExceptionInternal(e, problem, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, resquest);
 	}
