@@ -1,9 +1,8 @@
 package com.example.demo.api.mixin;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.model.Endereco;
 import com.example.demo.domain.model.FormaPagamento;
@@ -20,10 +19,10 @@ public class RestauranteMixin {
 	private Endereco endereco;
 	
 //	@JsonIgnore
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 
 //	@JsonIgnore
-	private LocalDateTime dataAtualizacao;
+	private OffsetDateTime dataAtualizacao;
 	 
 	@JsonIgnore
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();

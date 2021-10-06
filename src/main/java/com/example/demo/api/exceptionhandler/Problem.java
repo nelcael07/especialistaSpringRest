@@ -18,7 +18,7 @@ public class Problem {
 	private String details;
 	
 	private String userMessage;
-	private LocalDateTime timestamp;
+	private OffsetDateTime timestamp;
 	private List<Objects> objects;
 	
 	@Getter
