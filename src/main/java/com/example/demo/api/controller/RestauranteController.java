@@ -44,8 +44,6 @@ public class RestauranteController {
 	@Autowired
 	private RestauranteModelDiassembler restauranteDiassembler;
 	
-	
-	
 	@GetMapping
 	public List<RestauranteModel> listar(){
 		return restauranteAssembler.toColletionModel(restauranteRepository.findAll());
