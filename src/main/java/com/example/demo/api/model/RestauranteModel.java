@@ -13,10 +13,8 @@ public class RestauranteModel {
 	
 	private String nome;
 	
-	private BigDecimal precoFrete;
+	private BigDecimal taxaFrete;
 	
 	private CozinhaModel cozinha;
 	
-//	private String nomeCozinha;
-//	private Long idCozinha;
 }

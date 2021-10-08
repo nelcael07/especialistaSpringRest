@@ -3,14 +3,10 @@ package com.example.demo.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.example.demo.domain.exception.CozinhaNaoEncontradoException;
 import com.example.demo.domain.exception.EntidadeEmUsoException;
-import com.example.demo.domain.exception.EntidadeNaoEncontradaException;
 import com.example.demo.domain.model.Cozinha;
 import com.example.demo.domain.repository.CozinhaRespository;
 
@@ -35,7 +31,7 @@ public class CadastroCozinhaService {
 			cozinhaRepository.deleteById(id);
 		}catch (EmptyResultDataAccessException e) {
 			throw new CozinhaNaoEncontradoException(id);
-		}
+		} 
 		catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO , id));
 		}
