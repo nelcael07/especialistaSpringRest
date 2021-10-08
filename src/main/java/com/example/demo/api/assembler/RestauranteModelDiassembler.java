@@ -18,4 +18,11 @@ public class RestauranteModelDiassembler {
 		return modelMapper.map(restauranteInput, Restaurante.class);
 	}
 	
+	public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
+		// para evitar que o jpa reclame que está sendo auterado cozinha id x por cozinha id y.		
+		restaurante.setCozinha(new Cozinha());
+		
+		modelMapper.map(restauranteInput, restaurante);
+	}
+	
 }

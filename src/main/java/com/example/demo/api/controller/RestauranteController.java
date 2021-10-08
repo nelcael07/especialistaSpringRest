@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,9 +74,11 @@ public class RestauranteController {
 	@PutMapping("/{id}")
 	public RestauranteModel atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInput restauranteInput){
 		try {
-			Restaurante restaurante = restauranteDiassembler.toDomainObject(restauranteInput);
+//			Restaurante restaurante = restauranteDiassembler.toDomainObject(restauranteInput);
 			Restaurante restaurantebuscado = cadastroRestaurante.buscar(id);
-			BeanUtils.copyProperties(restaurante, restaurantebuscado, "id", "dataCadastro");
+			
+			restauranteDiassembler.copyToDomainObject(restauranteInput, restaurantebuscado);
+			
 			return restauranteAssembler.toModel(cadastroRestaurante.salvar(restaurantebuscado));
 		} catch (CozinhaNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage());
