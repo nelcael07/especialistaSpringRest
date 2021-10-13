@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.api.assembler.CidadeModelAssembler;
+import com.example.demo.api.assembler.CidadeModelDiassembler;
 import com.example.demo.api.model.CidadeModel;
+import com.example.demo.api.model.input.CidadeInput;
 import com.example.demo.domain.exception.EstadoNaoEncontradoException;
 import com.example.demo.domain.exception.NegocioException;
 import com.example.demo.domain.model.Cidade;
+import com.example.demo.domain.model.Restaurante;
 import com.example.demo.domain.repository.CidadeRepository;
 import com.example.demo.domain.service.CadastroCidadeService;
 
@@ -38,6 +41,9 @@ public class CidadeController {
 	@Autowired
 	private CidadeModelAssembler cidadeAssembler;
 	
+	@Autowired
+	private CidadeModelDiassembler cidadeDiassembler;
+	
 	@GetMapping
 	public List<CidadeModel> listar() {
 		return cidadeAssembler.toList(cidadeRepository.findAll());
@@ -47,23 +53,25 @@ public class CidadeController {
 	public CidadeModel buscar(@PathVariable Long id){
 		CidadeModel cidadeModel = new CidadeModel();
 		Cidade cidade = cidadeService.buscar(id);
-		return  cidadeAssembler.toModel(cidade);
+		return cidadeAssembler.toModel(cidade);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CidadeModel criar(@RequestBody @Valid Cidade cidade) {
+	public CidadeModel criar(@RequestBody @Valid CidadeInput cidadeInput) {
 		try {
+			Cidade cidade  = cidadeDiassembler.toDomainObject(cidadeInput);
 			return cidadeAssembler.toModel(cidadeService.salvar(cidade));
+			
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
 	@PutMapping("/{id}")
-	public CidadeModel atualizar(@PathVariable Long id, @RequestBody @Valid Cidade cidade){
+	public CidadeModel atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput){
 		Cidade cidadebuscada = cidadeService.buscar(id);
-		BeanUtils.copyProperties(cidade, cidadebuscada, "id");
+		cidadeDiassembler.copyDomainObject(cidadeInput, cidadebuscada);
 		try{
 			CidadeModel cidadeModel = new CidadeModel();
 			cidadeModel = cidadeAssembler.toModel(cidadeService.salvar(cidadebuscada));

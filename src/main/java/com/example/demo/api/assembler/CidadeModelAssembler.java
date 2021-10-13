@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.api.model.CidadeModel;
+import com.example.demo.api.model.RestauranteModel;
 import com.example.demo.domain.model.Cidade;
+import com.example.demo.domain.model.Restaurante;
+
+//CONVERÇÃO DE CIDADE PARA CIDADE MODEL
 
 @Component
 public class CidadeModelAssembler {
@@ -25,5 +29,10 @@ public class CidadeModelAssembler {
 			.collect(Collectors.toList());
 	}
 	
-	
 }
+
+
+
+
+
+
